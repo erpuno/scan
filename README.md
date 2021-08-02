@@ -13,6 +13,13 @@ Features
 * Windows Tray Application
 * Supports ERP.UNO CRM File Upload API
 
+Build
+-----
+
+```
+> C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe mia-scan.csproj
+```
+
 Credits
 -------
 
