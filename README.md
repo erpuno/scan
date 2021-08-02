@@ -16,6 +16,8 @@ Features
 Build
 -----
 
+Having Windows is the only prerequisite:
+
 ```
 > C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe mia-scan.csproj
 ```
