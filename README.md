@@ -8,9 +8,10 @@ Simple Windows tray application as scanning service for intranet WebSocket clien
 Features
 --------
 
-* Kodak Alaris TWAIN SDK
-* Built-in WebSocket server
+* Kodak Alaris C# TWAIN SDK
+* Built-in F# WebSocket server
 * Windows Tray Application
+* Supports ERP.UNO CRM File Upload API
 
 Credits
 -------
