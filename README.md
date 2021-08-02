@@ -8,7 +8,7 @@ Simple Windows tray application as scanning service for intranet WebSocket clien
 Features
 --------
 
-* Official TWAIN SDK
+* Kodak Alaris TWAIN SDK
 * Built-in WebSocket server
 * Windows Tray Application
 
