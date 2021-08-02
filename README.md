@@ -15,6 +15,6 @@ Features
 Credits
 -------
 
-Andrii Zadorozhnii
-Maksym Sokhatskyi
+* Andrii Zadorozhnii
+* Maksym Sokhatskyi
 
