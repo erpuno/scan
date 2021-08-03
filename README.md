@@ -1,7 +1,7 @@
 SCAN: Scanning Agent
 ====================
 
-Simple Windows tray application as scanning service for intranet WebSocket clients.
+`МІА: Сканування` is a simple Windows tray application as scanning service for intranet WebSocket clients of `МІА: Документообіг`.
 
 ![Screenshot](/Resources/screenshot.png?v=1)
 
@@ -15,7 +15,7 @@ Features
 * Kodak Alaris C# SDK
 * TWAIN32 flavour for the sake of coverage
 * Built-in F# WebSocket server
-* Supports ERP.UNO CRM File Upload API
+* Supports <a href="https://crm.erp.uno">МІА: Документообіг</a>
 
 Build
 -----
