@@ -53,9 +53,6 @@ namespace INFOTECH
             this.Hide();
         }
 
-        /// <summary>
-        /// Our constructor...
-        /// </summary>
         public FormScan()
         {
             // Build our form...
@@ -88,7 +85,6 @@ namespace INFOTECH
             m_blIndicators = true;
             m_blExit = false;
             m_iUseBitmap = 0;
-            this.FormClosing += new FormClosingEventHandler(FormScan_FormClosing);
 
             // Create our image capture object...
             try
@@ -736,6 +732,7 @@ namespace INFOTECH
         {
             if (disposing && (components != null))
             {
+
                 if (m_twain != null)
                 {
                     m_twain.Dispose();
@@ -756,15 +753,14 @@ namespace INFOTECH
                     m_brushBackground.Dispose();
                     m_brushBackground = null;
                 }
-                components.Dispose();
+      
+               components.Dispose();
+  
             }
-            base.Dispose(disposing);
+  
+          base.Dispose(disposing);
         }
 
-        /// <summary>
-        /// Something horrible has happened and we need to abort...
-        /// </summary>
-        /// <returns></returns>
         public bool ExitRequested()
         {
             return (m_blExit);
@@ -779,46 +775,12 @@ namespace INFOTECH
         #region Private Methods...
 
 
-        /// <summary>
-        /// We're being closed, clean up nicely...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void FormScan_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            // Make sure this thing is off...
-            SetMessageFilter(false);
-
-            // Get rid of the TWAIN object...
-            if (m_twain != null)
-            {
-                m_twain.Dispose();
-                m_twain = null;
-            }
-
-            // This will prevent ReportImage from doing anything as we close...
-            m_graphics1 = null;
-
-            // Bye-bye logging...
-            TWAIN32.Log.Close();
-        }
-
-        /// <summary>
-        /// The user wants to setup a customdsdata or a scan session...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonSetup_Click(object sender, EventArgs e)
         {
             m_formsetup.StartPosition = FormStartPosition.CenterParent;
             m_formsetup.ShowDialog(this);
         }
 
-        /// <summary>
-        /// Start a scan session...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonScan_Click(object sender, EventArgs e)
         {
             m_iUseBitmap = 0;
@@ -1136,6 +1098,7 @@ namespace INFOTECH
             SetButtons(EBUTTONSTATE.CLOSED);
             m_formsetup.Dispose();
             m_formsetup = null;
+            // Console.WriteLine("Close Click");
         }
 
         /// <summary>
