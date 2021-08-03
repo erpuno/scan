@@ -8,7 +8,7 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows.Forms;
-using TWAINWorkingGroup;
+using TWAIN32;
 
 namespace INFOTECH
 {
@@ -81,8 +81,8 @@ namespace INFOTECH
 
 
             // Open the log in our working folder, and say hi...
-            TWAINWorkingGroup.Log.Open("INFOTECH", ".", 1);
-            TWAINWorkingGroup.Log.Info("INFOTECH v" + System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
+            TWAIN32.Log.Open("INFOTECH", ".", 1);
+            TWAIN32.Log.Info("INFOTECH v" + System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
 
             // Init other stuff...
             m_blIndicators = true;
@@ -123,7 +123,7 @@ namespace INFOTECH
             }
             catch (Exception exception)
             {
-                TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                TWAIN32.Log.Error("exception - " + exception.Message);
                 m_twain = null;
                 m_blExit = true;
                 MessageBox.Show
@@ -339,7 +339,7 @@ namespace INFOTECH
             sts = m_twain.DatCustomdsdata(TWAIN.DG.CONTROL, TWAIN.MSG.GET, ref twcustomdsdata);
             if (sts != TWAIN.STS.SUCCESS)
             {
-                TWAINWorkingGroup.Log.Error("DAT_CUSTOMDSDATA failed...");
+                TWAIN32.Log.Error("DAT_CUSTOMDSDATA failed...");
                 return (sts);
             }
 
@@ -656,7 +656,7 @@ namespace INFOTECH
                 // Oh well...
                 else
                 {
-                    TWAINWorkingGroup.Log.Error("unsupported format <" + twimageinfo.PixelType + "," + twimageinfo.Compression + ">");
+                    TWAIN32.Log.Error("unsupported format <" + twimageinfo.PixelType + "," + twimageinfo.Compression + ">");
                     m_blDisableDsSent = true;
                     Rollback(TWAIN.STATE.S4);
                     SetButtons(EBUTTONSTATE.OPEN);
@@ -675,7 +675,7 @@ namespace INFOTECH
                         }
                         catch (Exception exception)
                         {
-                            TWAINWorkingGroup.Log.Error("CreateDirectory failed - " + exception.Message);
+                            TWAIN32.Log.Error("CreateDirectory failed - " + exception.Message);
                         }
                     }
 
@@ -800,7 +800,7 @@ namespace INFOTECH
             m_graphics1 = null;
 
             // Bye-bye logging...
-            TWAINWorkingGroup.Log.Close();
+            TWAIN32.Log.Close();
         }
 
         /// <summary>

@@ -50,7 +50,7 @@ namespace INFOTECH
             this.m_buttonSetup.Name = "m_buttonSetup";
             this.m_buttonSetup.Size = new System.Drawing.Size(75, 23);
             this.m_buttonSetup.TabIndex = 3;
-            this.m_buttonSetup.Text = "Налаштування...";
+            this.m_buttonSetup.Text = "Тюнінг";
             this.m_buttonSetup.UseVisualStyleBackColor = true;
             this.m_buttonSetup.Click += new System.EventHandler(this.m_buttonSetup_Click);
             // 

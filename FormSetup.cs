@@ -3,7 +3,7 @@ using System;
 using System.IO;
 using System.Security.Permissions;
 using System.Windows.Forms;
-using TWAINWorkingGroup;
+using TWAIN32;
 
 namespace INFOTECH
 {
@@ -49,7 +49,7 @@ namespace INFOTECH
                 }
                 catch (Exception exception)
                 {
-                    TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                    TWAIN32.Log.Error("exception - " + exception.Message);
                     m_szTwainscanFolder = Directory.GetCurrentDirectory();
                 }
             }
@@ -158,7 +158,7 @@ namespace INFOTECH
             }
             catch (Exception exception)
             {
-                TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                TWAIN32.Log.Error("exception - " + exception.Message);
                 return ("");
             }
         }
@@ -184,7 +184,7 @@ namespace INFOTECH
             }
             catch (Exception exception)
             {
-                TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                TWAIN32.Log.Error("exception - " + exception.Message);
                 return ("");
             }
         }
@@ -206,7 +206,7 @@ namespace INFOTECH
             }
             catch (Exception exception)
             {
-                TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                TWAIN32.Log.Error("exception - " + exception.Message);
                 // Just let it slide...
             }
         }
@@ -227,7 +227,7 @@ namespace INFOTECH
             }
             catch (Exception exception)
             {
-                TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                TWAIN32.Log.Error("exception - " + exception.Message);
                 // Just let it slide...
             }
         }
@@ -294,7 +294,7 @@ namespace INFOTECH
             }
             catch (Exception exception)
             {
-                TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                TWAIN32.Log.Error("exception - " + exception.Message);
                 blDeleted = false;
                 MessageBox.Show("Failed to delete setting...");
             }
@@ -326,7 +326,7 @@ namespace INFOTECH
                 }
                 catch (Exception exception)
                 {
-                    TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                    TWAIN32.Log.Error("exception - " + exception.Message);
                     return;
                 }
             }
@@ -373,7 +373,7 @@ namespace INFOTECH
                 }
                 catch (Exception exception)
                 {
-                    TWAINWorkingGroup.Log.Error("exception - " + exception.Message);
+                    TWAIN32.Log.Error("exception - " + exception.Message);
                     MessageBox.Show("Unable to create settings folder...'" + m_szSettingsFolder + "'");
                     return;
                 }

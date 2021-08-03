@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Windows.Forms;
-using TWAINWorkingGroup;
+using TWAIN32;
 
 namespace INFOTECH
 {
