@@ -126,11 +126,8 @@
     <Compile Include="FormSetup.Designer.cs"><DependentUpon>FormSetup.cs</DependentUpon></Compile>
     <Compile Include="FormSelect.cs"><SubType>Form</SubType></Compile>
     <Compile Include="FormSelect.Designer.cs"><DependentUpon>FormSelect.cs</DependentUpon></Compile>
-    <Compile Include="AppWindow.cs"><SubType>Form</SubType></Compile>
-    <Compile Include="AppWindow.Designer.cs"><DependentUpon>AppWindow.cs</DependentUpon></Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="AppWindow.resx"> <DependentUpon>AppWindow.cs</DependentUpon></EmbeddedResource>
     <EmbeddedResource Include="FormScan.resx"><DependentUpon>FormScan.cs</DependentUpon></EmbeddedResource>
     <EmbeddedResource Include="FormSelect.resx"><DependentUpon>FormSelect.cs</DependentUpon></EmbeddedResource>
     <EmbeddedResource Include="FormSetup.resx"><DependentUpon>FormSetup.cs</DependentUpon></EmbeddedResource>
