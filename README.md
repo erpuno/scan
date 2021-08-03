@@ -1,7 +1,7 @@
 SCAN: Scanning Agent
 ====================
 
-`МІА: Сканування` is a simple Windows tray application as scanning service for intranet WebSocket clients of `МІА: Документообіг`.
+`МІА: Сканування` is a simple Windows tray application as scanning service for `МІА: Документообіг` clients.
 
 ![Screenshot](/Resources/screenshot.png?v=1)
 
