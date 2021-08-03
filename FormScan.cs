@@ -33,11 +33,11 @@ namespace INFOTECH
             Environment.Exit(0);
         }
 
+
         private void Version(object sender, EventArgs e)
         {
             MessageBox.Show("Версія: 2.5.1.0\n\nРозробник: ДП «ІНФОТЕХ»", "МІА: Сканування");
         }
-
 
         private void WindowResize(object sender, EventArgs e)
         {
@@ -67,9 +67,10 @@ namespace INFOTECH
 
             // Modify the right-click menu of your system tray icon here
             ContextMenu menu = new ContextMenu();
-            menu.MenuItems.Add("Вихід з програми", ContextMenuExit);
+            menu.MenuItems.Add("Про «МІА: Сканування»", Version);
+            menu.MenuItems.Add("Налаштування профілів користувача", m_buttonSetup_Click);
             menu.MenuItems.Add("-");
-            menu.MenuItems.Add("Про МІА:Сканування...", Version);
+            menu.MenuItems.Add("Завершити програму", ContextMenuExit);
             this.SystemTrayIcon.ContextMenu = menu;
 
             this.Resize += WindowResize;

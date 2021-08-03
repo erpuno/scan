@@ -116,7 +116,7 @@ namespace INFOTECH
             this.Controls.Add(this.m_buttonOpen);
             this.Controls.Add(this.m_buttonClose);
             this.Controls.Add(this.m_pictureboxImage2);
-            this.Controls.Add(this.m_buttonSetup);
+//            this.Controls.Add(this.m_buttonSetup);
             this.Controls.Add(this.m_buttonScan);
             this.Controls.Add(this.m_pictureboxImage1);
             this.Name = "MIA-SCAN";
