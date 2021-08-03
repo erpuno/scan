@@ -37,7 +37,7 @@ namespace INFOTECH
             this.m_buttonOpen.Name = "m_buttonOpen";
             this.m_buttonOpen.Size = new System.Drawing.Size(75, 23);
             this.m_buttonOpen.TabIndex = 1;
-            this.m_buttonOpen.Text = "Open";
+            this.m_buttonOpen.Text = "Відкрити";
             this.m_buttonOpen.UseVisualStyleBackColor = true;
             this.m_buttonOpen.Click += new System.EventHandler(this.m_buttonOpen_Click);
             // 
@@ -48,7 +48,7 @@ namespace INFOTECH
             this.m_labelSelect.Name = "m_labelSelect";
             this.m_labelSelect.Size = new System.Drawing.Size(110, 13);
             this.m_labelSelect.TabIndex = 3;
-            this.m_labelSelect.Text = "Select TWAIN Driver:";
+            this.m_labelSelect.Text = "Доступні TWAIN драйвери:";
             // 
             // FormSelect
             // 
@@ -59,8 +59,9 @@ namespace INFOTECH
             this.Controls.Add(this.m_labelSelect);
             this.Controls.Add(this.m_buttonOpen);
             this.Controls.Add(this.m_listboxSelect);
-            this.Name = "FormSelect";
-            this.Text = "Open TWAIN Driver";
+            this.Name = "MIA-SELECT";
+            this.Text = "Виберіть TWAIN джерело для захоплення зображення";
+            this.Icon = Properties.Resources.Default;
             this.ResumeLayout(false);
             this.PerformLayout();
 

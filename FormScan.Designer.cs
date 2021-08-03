@@ -40,7 +40,7 @@ namespace INFOTECH
             this.m_buttonScan.Name = "m_buttonScan";
             this.m_buttonScan.Size = new System.Drawing.Size(75, 23);
             this.m_buttonScan.TabIndex = 1;
-            this.m_buttonScan.Text = "Scan";
+            this.m_buttonScan.Text = "Сканувати";
             this.m_buttonScan.UseVisualStyleBackColor = true;
             this.m_buttonScan.Click += new System.EventHandler(this.m_buttonScan_Click);
             // 
@@ -50,7 +50,7 @@ namespace INFOTECH
             this.m_buttonSetup.Name = "m_buttonSetup";
             this.m_buttonSetup.Size = new System.Drawing.Size(75, 23);
             this.m_buttonSetup.TabIndex = 3;
-            this.m_buttonSetup.Text = "Setup...";
+            this.m_buttonSetup.Text = "Налаштування...";
             this.m_buttonSetup.UseVisualStyleBackColor = true;
             this.m_buttonSetup.Click += new System.EventHandler(this.m_buttonSetup_Click);
             // 
@@ -69,7 +69,7 @@ namespace INFOTECH
             this.m_buttonClose.Name = "m_buttonClose";
             this.m_buttonClose.Size = new System.Drawing.Size(75, 23);
             this.m_buttonClose.TabIndex = 5;
-            this.m_buttonClose.Text = "Close";
+            this.m_buttonClose.Text = "Закрити";
             this.m_buttonClose.UseVisualStyleBackColor = true;
             this.m_buttonClose.Click += new System.EventHandler(this.m_buttonClose_Click);
             // 
@@ -79,7 +79,7 @@ namespace INFOTECH
             this.m_buttonOpen.Name = "m_buttonOpen";
             this.m_buttonOpen.Size = new System.Drawing.Size(75, 23);
             this.m_buttonOpen.TabIndex = 6;
-            this.m_buttonOpen.Text = "Open...";
+            this.m_buttonOpen.Text = "Відкрити...";
             this.m_buttonOpen.UseVisualStyleBackColor = true;
             this.m_buttonOpen.Click += new System.EventHandler(this.m_buttonOpen_Click);
             // 
@@ -89,7 +89,7 @@ namespace INFOTECH
             this.m_buttonStop.Name = "m_buttonStop";
             this.m_buttonStop.Size = new System.Drawing.Size(75, 23);
             this.m_buttonStop.TabIndex = 7;
-            this.m_buttonStop.Text = "Stop";
+            this.m_buttonStop.Text = "Зупинити";
             this.m_buttonStop.UseVisualStyleBackColor = true;
             this.m_buttonStop.Click += new System.EventHandler(this.m_buttonStop_Click);
 

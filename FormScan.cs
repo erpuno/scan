@@ -33,6 +33,12 @@ namespace INFOTECH
             Environment.Exit(0);
         }
 
+        private void Version(object sender, EventArgs e)
+        {
+            MessageBox.Show("Версія: 2.5.1.0\n\nРозробник: ДП «ІНФОТЕХ»", "МІА: Сканування");
+        }
+
+
         private void WindowResize(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
@@ -59,14 +65,14 @@ namespace INFOTECH
             this.SystemTrayIcon.Icon = Properties.Resources.Default;
 
             // Change the Text property to the name of your application
-            this.SystemTrayIcon.Text = "System Tray App";
+            this.SystemTrayIcon.Text = "МІА: Сканування Документів";
             this.SystemTrayIcon.Visible = true;
 
             // Modify the right-click menu of your system tray icon here
             ContextMenu menu = new ContextMenu();
             menu.MenuItems.Add("Вихід з програми", ContextMenuExit);
             menu.MenuItems.Add("-");
-            menu.MenuItems.Add("Про МІА:Сканування...", ContextMenuExit);
+            menu.MenuItems.Add("Про МІА:Сканування...", Version);
             this.SystemTrayIcon.ContextMenu = menu;
 
             this.Resize += WindowResize;
@@ -95,14 +101,14 @@ namespace INFOTECH
                 // Instantiate TWAIN, and register ourselves...
                 m_twain = new TWAIN
                 (
-                    "TWAIN Working Group",
-                    "TWAIN Open Source",
-                    "TWAIN CS Scan App",
+                    "INFOTECH SE",
+                    "ERP.UNO Open Source",
+                    "MIA-SCAN",
                     (ushort)TWAIN.TWON_PROTOCOL.MAJOR,
                     (ushort)TWAIN.TWON_PROTOCOL.MINOR,
                     ((uint)TWAIN.DG.APP2 | (uint)TWAIN.DG.CONTROL | (uint)TWAIN.DG.IMAGE),
                     TWAIN.TWCY.USA,
-                    "TWAIN CS Scan App",
+                    "MIA-SCAN",
                     TWAIN.TWLG.ENGLISH_USA,
                     2,
                     4,
@@ -127,8 +133,8 @@ namespace INFOTECH
                     "An internet search for 'TWAIN DSM' will locate it and once\n" +
                     "installed, you should be able to proceed.\n\n" +
                     "You can also try the following link:\n" +
-                    "http://sourceforge.net/projects/twain-dsm/",
-                    "Error Starting TWAIN CS Scan"
+                    "https://github.com/erpuno/scan",
+                    "Error Starting MIA: Scanning"
                 );
                 return;
             }
@@ -1014,14 +1020,14 @@ namespace INFOTECH
             for (sts = m_twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETFIRST, ref twidentity);
                  sts != TWAIN.STS.ENDOFLIST;
                  sts = m_twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETNEXT, ref twidentity))
-            {               
+            {
                 lszIdentity.Add(TWAIN.IdentityToCsv(twidentity));
             }
 
             // Ruh-roh...
             if (lszIdentity.Count == 0)
             {
-                MessageBox.Show("There are no TWAIN drivers installed on this system...");
+                MessageBox.Show("На цій ситемі відсутні TWAIN драйвери...");
                 return;
             }
 
@@ -1068,13 +1074,13 @@ namespace INFOTECH
             sts = m_twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.OPENDS, ref twidentity);
             if (sts != TWAIN.STS.SUCCESS)
             {
-                MessageBox.Show("Unable to open scanner (it is turned on and plugged in?)");
+                MessageBox.Show("Неможливо відкрити сканер (перевірте фізичне підключення та електричне ввімкнення)");
                 m_blExit = true;
                 return;
             }
 
             // Update the main form title...
-            this.Text = "TWAIN C# Scan (" + twidentity.ProductName.Get() + ")";
+            this.Text = "МІА: Сканування (" + twidentity.ProductName.Get() + ")";
 
             // Strip off unsafe chars.  Sadly, mono let's us down here...
             m_szProductDirectory = CSV.Parse(szIdentity)[11];

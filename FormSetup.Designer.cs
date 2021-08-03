@@ -38,7 +38,7 @@ namespace INFOTECH
             this.m_labelUseUiSettings.Name = "m_labelUseUiSettings";
             this.m_labelUseUiSettings.Size = new System.Drawing.Size(305, 13);
             this.m_labelUseUiSettings.TabIndex = 1;
-            this.m_labelUseUiSettings.Text = "Select driver settings for next scan (if blank the driver chooses):";
+            this.m_labelUseUiSettings.Text = "Налаштування сканера для наступного сканування:";
             // 
             // m_buttonShowDriverUi
             // 
@@ -46,7 +46,7 @@ namespace INFOTECH
             this.m_buttonShowDriverUi.Name = "m_buttonShowDriverUi";
             this.m_buttonShowDriverUi.Size = new System.Drawing.Size(294, 23);
             this.m_buttonShowDriverUi.TabIndex = 1;
-            this.m_buttonShowDriverUi.Text = "Change driver settings (press this first)...";
+            this.m_buttonShowDriverUi.Text = "Змінити налаштування драйвера (спочатку цю)...";
             this.m_buttonShowDriverUi.UseVisualStyleBackColor = true;
             this.m_buttonShowDriverUi.Click += new System.EventHandler(this.m_buttonSetup_Click);
             // 
@@ -56,7 +56,7 @@ namespace INFOTECH
             this.m_buttonSaveUiSettings.Name = "m_buttonSaveUiSettings";
             this.m_buttonSaveUiSettings.Size = new System.Drawing.Size(294, 23);
             this.m_buttonSaveUiSettings.TabIndex = 2;
-            this.m_buttonSaveUiSettings.Text = "Save driver settings (then press this one)...";
+            this.m_buttonSaveUiSettings.Text = "Зберегти налаштування драйвера... (потім цю)";
             this.m_buttonSaveUiSettings.UseVisualStyleBackColor = true;
             this.m_buttonSaveUiSettings.Click += new System.EventHandler(this.m_buttonSaveas_Click);
             // 
@@ -67,7 +67,7 @@ namespace INFOTECH
             this.m_labelSelectDestinationFolder.Name = "m_labelSelectDestinationFolder";
             this.m_labelSelectDestinationFolder.Size = new System.Drawing.Size(302, 13);
             this.m_labelSelectDestinationFolder.TabIndex = 4;
-            this.m_labelSelectDestinationFolder.Text = "Select image destination folder (set blank if not saving images):";
+            this.m_labelSelectDestinationFolder.Text = "Виберіть папку для зберігання зображень:";
             // 
             // m_textboxFolder
             // 
@@ -111,7 +111,7 @@ namespace INFOTECH
             this.m_groupboxCreateUiSetting.Size = new System.Drawing.Size(329, 109);
             this.m_groupboxCreateUiSetting.TabIndex = 9;
             this.m_groupboxCreateUiSetting.TabStop = false;
-            this.m_groupboxCreateUiSetting.Text = "Create new driver settings";
+            this.m_groupboxCreateUiSetting.Text = "Створити налаштування драйвера";
             // 
             // m_groupboxManageSettings
             // 
@@ -121,7 +121,7 @@ namespace INFOTECH
             this.m_groupboxManageSettings.Size = new System.Drawing.Size(329, 109);
             this.m_groupboxManageSettings.TabIndex = 10;
             this.m_groupboxManageSettings.TabStop = false;
-            this.m_groupboxManageSettings.Text = "Select driver settings";
+            this.m_groupboxManageSettings.Text = "Налаштування драйвера";
             // 
             // m_buttonDeleteSetting
             // 
@@ -129,7 +129,7 @@ namespace INFOTECH
             this.m_buttonDeleteSetting.Name = "m_buttonDeleteSetting";
             this.m_buttonDeleteSetting.Size = new System.Drawing.Size(117, 23);
             this.m_buttonDeleteSetting.TabIndex = 0;
-            this.m_buttonDeleteSetting.Text = "Delete setting...";
+            this.m_buttonDeleteSetting.Text = "Видалити";
             this.m_buttonDeleteSetting.UseVisualStyleBackColor = true;
             this.m_buttonDeleteSetting.Click += new System.EventHandler(this.m_buttonDeleteSetting_Click);
             // 
@@ -140,7 +140,7 @@ namespace INFOTECH
             this.m_groupboxImageDestination.Size = new System.Drawing.Size(329, 78);
             this.m_groupboxImageDestination.TabIndex = 11;
             this.m_groupboxImageDestination.TabStop = false;
-            this.m_groupboxImageDestination.Text = "Select image destination";
+            this.m_groupboxImageDestination.Text = "Папка де складати зображення";
             // 
             // FormSetup
             // 
@@ -158,9 +158,10 @@ namespace INFOTECH
             this.Controls.Add(this.m_groupboxCreateUiSetting);
             this.Controls.Add(this.m_groupboxManageSettings);
             this.Controls.Add(this.m_groupboxImageDestination);
-            this.Name = "МІА: Сканування";
-            this.Text = "Setup TWAIN Scan";
-            this.m_groupboxManageSettings.ResumeLayout(false);
+            this.Name = "MIA-SETUP";
+            this.Text = "Налаштування МІА: Сканування";
+            this.Icon = Properties.Resources.Default;
+           this.m_groupboxManageSettings.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
