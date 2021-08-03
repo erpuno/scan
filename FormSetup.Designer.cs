@@ -161,7 +161,7 @@ namespace INFOTECH
             this.Name = "MIA-SETUP";
             this.Text = "Налаштування МІА: Сканування";
             this.Icon = Properties.Resources.Default;
-           this.m_groupboxManageSettings.ResumeLayout(false);
+            this.m_groupboxManageSettings.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
