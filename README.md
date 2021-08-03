@@ -9,7 +9,9 @@ Features
 --------
 
 * Windows Tray Application
-* Zero-dependency single executable 300K file distribution 
+* Zero-dependency
+* Single file distribution 
+* Small executable (300K)
 * Kodak Alaris C# SDK
 * TWAIN32 flavour for the sake of coverage
 * Built-in F# WebSocket server
