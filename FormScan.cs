@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
+using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows.Forms;
@@ -18,6 +19,9 @@ namespace INFOTECH
         // Public Methods...
         ///////////////////////////////////////////////////////////////////////////////
         #region Public Methods...
+
+        private int counter = 77;
+        private System.Windows.Forms.NotifyIcon notifyIcon;
 
         private void SystemTrayIconDoubleClick(object sender, MouseEventArgs e)
         {
@@ -34,10 +38,28 @@ namespace INFOTECH
         }
 
 
+        public void ShowNotification(string Source, string Message, string URL)
+        {
+            notifyIcon.Icon = Properties.Resources.Default;
+            notifyIcon.Text = "МІА: Сповіщення";
+            notifyIcon.BalloonTipTitle = Source;
+            notifyIcon.BalloonTipText = Message;
+            notifyIcon.BalloonTipClicked += delegate { System.Diagnostics.Process.Start(URL); };
+            notifyIcon.ShowBalloonTip(100);
+            notifyIcon.Visible = true;
+        }
+
         private void Version(object sender, EventArgs e)
         {
+            updateCounter();
+            ShowNotification("Джерело: МІА:Документообіг",
+                             "Повідомлення: Новий документ ЗА-23545",
+                             "https://crm.erp.uno");
+
             MessageBox.Show("Версія: 2.5.1.0\n\nРозробник: ДП «ІНФОТЕХ»", "МІА: Сканування");
         }
+
+        public void OpenUrl(string URL) { System.Diagnostics.Process.Start("https://crm.erp.uno"); }
 
         private void WindowResize(object sender, EventArgs e)
         {
@@ -60,6 +82,7 @@ namespace INFOTECH
 
             this.Icon = Properties.Resources.Default;
             this.SystemTrayIcon.Icon = Properties.Resources.Default;
+            this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
 
             // Change the Text property to the name of your application
             this.SystemTrayIcon.Text = "МІА: Сканування Документів";
@@ -71,7 +94,11 @@ namespace INFOTECH
             menu.MenuItems.Add("Налаштування профілів користувача", m_buttonSetup_Click);
             menu.MenuItems.Add("-");
             menu.MenuItems.Add("Завершити програму", ContextMenuExit);
+
             this.SystemTrayIcon.ContextMenu = menu;
+            this.notifyIcon.Icon = Properties.Resources.Default;
+            this.notifyIcon.ContextMenu = menu;
+            this.notifyIcon.Visible = true;
 
             this.Resize += WindowResize;
             this.Text = "MIA: Сканування";
@@ -146,6 +173,17 @@ namespace INFOTECH
             SetButtons(EBUTTONSTATE.CLOSED);
         }
 
+        public void updateCounter()
+        {
+            Brush brush = new SolidBrush(Color.White);
+            Font drawFont = new Font("Arial", 8);
+            Bitmap bitmap = new Bitmap(16, 16);
+            Graphics graphics = Graphics.FromImage(bitmap);
+            graphics.DrawString((counter++).ToString(), drawFont, brush, 0, 1);
+            Icon icon = Icon.FromHandle(bitmap.GetHicon());
+            this.SystemTrayIcon.Icon = icon;
+        }
+
         /// <summary>
         /// Our scan callback event, used to drive the engine when scanning...
         /// </summary>
@@ -156,7 +194,7 @@ namespace INFOTECH
         /// called once by ScanCallbackTrigger on receipt of an event
         /// like MSG_XFERREADY, and then will be reissued on every call
         /// into ScanCallback until we're done and get back to state 4.
-        ///  
+        ///
         /// This helps to make sure we're always running in the context
         /// of FormMain on Windows, which is critical if we want drivers
         /// to work properly.  It also gives a way to break up the calls
@@ -754,11 +792,11 @@ namespace INFOTECH
                     m_brushBackground.Dispose();
                     m_brushBackground = null;
                 }
-      
+
                components.Dispose();
-  
+
             }
-  
+
           base.Dispose(disposing);
         }
 
