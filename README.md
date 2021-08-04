@@ -7,7 +7,7 @@ SCAN: Scanning Agent
 
 It supports undread message counter and native system notifications:
 
-![Screenshot](/Resources/screenshot3.png)
+![Screenshot](/Resources/messaging.png)
 
 Features
 --------
