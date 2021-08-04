@@ -3,7 +3,11 @@ SCAN: Scanning Agent
 
 `МІА: Сканування` is a simple Windows tray application as a scanning service for `МІА: Документообіг` clients.
 
-![Screenshot](/Resources/screenshot.png?v=1)
+![Screenshot](/Resources/screenshot.png)
+
+It supports undread message counter and native system notifications:
+
+![Screenshot](/Resources/screenshot2.png)
 
 Features
 --------
@@ -11,7 +15,7 @@ Features
 * Windows Tray Application
 * Multiple Scan-Profiles
 * Zero-dependency
-* Single file distribution 
+* Single file distribution
 * Small executable (300K)
 * Kodak Alaris C# SDK
 * TWAIN32 flavour for the sake of coverage
