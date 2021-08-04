@@ -9,6 +9,7 @@ Features
 --------
 
 * Windows Tray Application
+* Multiple Scan-Profiles
 * Zero-dependency
 * Single file distribution 
 * Small executable (300K)
