@@ -21,22 +21,6 @@ namespace INFOTECH
         private int m_iImageXferCount = 0;
         private TWAIN.STATE m_stateAfterScan;
 
-        public delegate TWAIN.MSG ReportImageDelegate
-        (
-            string a_szTag,
-            string a_szDg,
-            string a_szDat,
-            string a_szMsg,
-            TWAIN.STS a_sts,
-            Bitmap a_bitmap,
-            string a_szFile,
-            string a_szTwimageinfo,
-            byte[] a_abImage,
-            int a_iImageOffset
-        );
-
-        private ReportImageDelegate ReportImage = null;
-
         private int counter = 77;
         private System.Windows.Forms.NotifyIcon notifyIcon;
 
@@ -521,7 +505,7 @@ namespace INFOTECH
                 }
                 else
                 {
-                    twainmsg = TWAIN.MSG.ENDXFER; //ReportImage("ScanCallback: 006", TWAIN.DG.IMAGE.ToString(), TWAIN.DAT.IMAGENATIVEXFER.ToString(), TWAIN.MSG.GET.ToString(), sts, bitmap, null, null, null, 0);
+                    twainmsg = TWAIN.MSG.ENDXFER; 
                     if (twainmsg == TWAIN.MSG.STOPFEEDER)
                     {
                         m_twainmsgPendingXfers = TWAIN.MSG.STOPFEEDER;
@@ -561,7 +545,6 @@ namespace INFOTECH
                     {
                         Console.WriteLine("ImageInfo failed: " + sts + Environment.NewLine);
                         m_twain.Rollback(m_stateAfterScan);
-                        ReportImage("ScanCallback: 052", TWAIN.DG.IMAGE.ToString(), TWAIN.DAT.IMAGEINFO.ToString(), TWAIN.MSG.GET.ToString(), sts, null, null, null, null, 0);
                         return (TWAIN.STS.SUCCESS);
                     }
                 }
@@ -612,7 +595,6 @@ namespace INFOTECH
                         Console.WriteLine("Pending Reset");
                         m_twainmsgPendingXfers = TWAIN.MSG.ENDXFER;
 //                        m_twain.Rollback(m_stateAfterScan);
-//                        ReportImage("ScanCallback: 054", TWAIN.DG.CONTROL.ToString(), TWAIN.DAT.PENDINGXFERS.ToString(), TWAIN.MSG.RESET.ToString(), sts, null, null, null, null, 0);
                         return (TWAIN.STS.SUCCESS);
 
                     // Stop the feeder...
@@ -626,7 +608,6 @@ namespace INFOTECH
                         {
                             // If we can't stop gracefully, then just abort...
                             m_twain.Rollback(m_stateAfterScan);
-//                            ReportImage("ScanCallback: 055", TWAIN.DG.CONTROL.ToString(), TWAIN.DAT.PENDINGXFERS.ToString(), TWAIN.MSG.RESET.ToString(), sts, null, null, null, null, 0);
                             return (TWAIN.STS.SUCCESS);
                         }
                         break;
