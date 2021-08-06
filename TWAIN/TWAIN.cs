@@ -3811,7 +3811,7 @@ namespace TWAIN32
                     case "SWEDISH": return (((int)TWLG.SWE).ToString());
                     case "THAI": return ("84");
                     case "TURKISH": return ("85");
-                    case "UKRANIAN": return ("86");
+                    case "UKRAINIAN": return ("86");
                     case "ASSAMESE": return ("87");
                     case "BENGALI": return ("88");
                     case "BIHARI": return ("89");

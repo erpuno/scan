@@ -3736,7 +3736,7 @@ namespace TWAIN32
             SWEDISH = TWLG.SWE,
             THAI = 84,
             TURKISH = 85,
-            UKRANIAN = 86,
+            UKRAINIAN = 86,
             ASSAMESE = 87,
             BENGALI = 88,
             BIHARI = 89,
@@ -4442,7 +4442,7 @@ namespace TWAIN32
                     case TWLG.BULGARIAN:
                     case TWLG.RUSSIAN:
                     case TWLG.SERBIAN_CYRILLIC:
-                    case TWLG.UKRANIAN:
+                    case TWLG.UKRAINIAN:
                         m_encoding = Encoding.GetEncoding(1251);
                         break;
 
