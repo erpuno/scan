@@ -75,6 +75,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\FSharp.Core.dll</HintPath>
     </Reference>
+    <Reference Include="PdfSharp">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resources\PdfSharp.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <!--PackageReference Include="System.Resources.Extensions" /-->

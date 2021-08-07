@@ -17,8 +17,9 @@ Features
 * Windows Tray Application
 * System Notification
 * Multiple Scan-Profile per data source
+* Empira C# PDF SDK
 * Kodak Alaris C# TWAIN SDK
-* INFOTECH F# WebSocket server (port 50220)
+* INFOTECH F# WebSocket server
 * Xamarin C# MQTT client
 * <a href="https://crm.erp.uno">МІА: Документообіг</a> Companion Application
 
@@ -29,6 +30,17 @@ Having Windows is the only prerequisite:
 
 ```
 > C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe mia-agent.csproj
+```
+
+Connect
+-------
+
+Connect from JavaScript console:
+
+```
+> ws = new WebSocket("ws://127.0.0.1:50220")
+> ws.onmessage = function (evt) { console.log(evt.data); }
+> ws.send('PING')
 ```
 
 Credits

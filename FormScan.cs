@@ -11,6 +11,11 @@ using System.Security.Permissions;
 using System.Windows.Forms;
 using TWAIN32;
 
+using PdfSharp;
+using PdfSharp.Pdf;
+using PdfSharp.Pdf.IO;
+using PdfSharp.Drawing;
+
 namespace INFOTECH
 {
     public partial class FormScan : Form, IMessageFilter
@@ -51,6 +56,21 @@ namespace INFOTECH
             ShowNotification("Джерело: МІА:Документообіг",
                              "Повідомлення: Новий документ ЗА-23545",
                              "https://crm.erp.uno");
+
+            PdfDocument doc = new PdfDocument();
+
+            doc.Pages.Add(new PdfPage());
+            XGraphics xgr = XGraphics.FromPdfPage(doc.Pages[0]);
+            XImage img = XImage.FromFile(@"d:\BeOS\img000020.tif");
+            xgr.DrawImage(img, 0, 0);
+
+            doc.Pages.Add(new PdfPage());
+            xgr = XGraphics.FromPdfPage(doc.Pages[1]);
+            img = XImage.FromFile(@"d:\BeOS\img000030.tif");
+            xgr.DrawImage(img, 0, 0);
+
+            doc.Save(@"d:\BeOS\doc000030.pdf");
+            doc.Close();
 
             MessageBox.Show("Версія: 2.5.1.0\n\nРозробник: ДП «ІНФОТЕХ»", "МІА: Сканування");
         }
