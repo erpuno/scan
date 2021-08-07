@@ -99,7 +99,6 @@ namespace INFOTECH
             this.Resize += WindowResize;
             this.Text = "MIA: Сканування";
             this.FormClosing += WindowClosing;
-            
 
             TWAIN32.Log.Open("INFOTECH", ".", 1);
             TWAIN32.Log.Info("INFOTECH v" + System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
@@ -182,13 +181,11 @@ namespace INFOTECH
             TWAIN.TW_CAPABILITY twcapability;
             TWAIN.TW_CUSTOMDSDATA twcustomdsdata;
 
-            // Reset the driver, we don't care if it succeeds or fails...
             szStatus = "";
             twcapability = default(TWAIN.TW_CAPABILITY);
             twain.Twain.CsvToCapability(ref twcapability, ref szStatus, "0,0,0");
             twain.Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.RESETALL, ref twcapability);
 
-            // Get the snapshot from a file...
             FileStream filestream = null;
             try
             {
@@ -305,20 +302,18 @@ namespace INFOTECH
             if (a_blClosing) { return (TWAIN.STS.SUCCESS); }
 
             Console.WriteLine("Scan Callback IsMsgCloseDsReq {0}", twain.Twain.IsMsgCloseDsReq());
-            Console.WriteLine("Scan Callback m_blDisableDsSent {0}", !twain.DisableDsSent);
             if (twain.Twain.IsMsgCloseDsReq() && !twain.DisableDsSent)
             {
+                Console.WriteLine("IsMsgCloseDsReq {0}", !twain.DisableDsSent);
                 twain.DisableDsSent = true;
                 twain.Rollback(TWAIN.STATE.S4);
                 SetButtons(EBUTTONSTATE.OPEN);
             }
 
-
-            // Handle DAT_NULL/MSG_CLOSEDSOK...
             Console.WriteLine("Scan Callback IsMsgCloseDsOk {0}", twain.Twain.IsMsgCloseDsOk());
-            Console.WriteLine("Scan Callback m_blDisableDsSent {0}", !twain.DisableDsSent);
             if (twain.Twain.IsMsgCloseDsOk() && !twain.DisableDsSent)
             {
+                Console.WriteLine("IsMsgCloseDsOk {0}", !twain.DisableDsSent);
                 twain.DisableDsSent = true;
                 twain.Rollback(TWAIN.STATE.S4);
                 SetButtons(EBUTTONSTATE.OPEN);
@@ -389,7 +384,7 @@ namespace INFOTECH
                     Console.WriteLine("File: {0}", aszFilename);
                     bitmap.Save(aszFilename, ImageFormat.Tiff);
 
-                    twainmsg = TWAIN.MSG.ENDXFER; 
+                    twainmsg = TWAIN.MSG.ENDXFER;
                     bitmap = null;
                     blXferDone = true;
                     twain.DisableDsSent = true;
@@ -436,6 +431,7 @@ namespace INFOTECH
                 return (TWAIN.STS.SUCCESS);
             }
 
+            // End page XFER 0 0
             if (twpendingxfersEndXfer.Count == 0)
             {
                 Console.WriteLine("Scanning done: " + TWAIN.STS.SUCCESS);
@@ -450,7 +446,6 @@ namespace INFOTECH
             Application.DoEvents();
             BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
 
-            // All done...
             return (TWAIN.STS.SUCCESS);
 
         }
@@ -691,51 +686,19 @@ namespace INFOTECH
                     break;
                 }
             }
-            if (twain.Exit)
-            {
-                return;
-            }
 
-            // Make it the default, we don't care if this succeeds...
-            twidentity = default(TWAIN.TW_IDENTITY);
-            TWAIN.CsvToIdentity(ref twidentity, szIdentity);
-            twain.Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twidentity);
+            if (twain.Exit) { return; }
 
-            // Open it...
-            sts = twain.Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.OPENDS, ref twidentity);
-            Console.WriteLine("OpenDS: {0}", sts);
-            if (sts != TWAIN.STS.SUCCESS)
-            {
-                MessageBox.Show("Неможливо відкрити сканер (перевірте фізичне підключення та електричне ввімкнення)");
-                twain.Exit = true;
-                return;
-            }
-
-            // Update the main form title...
             this.Text = "МІА: Сканування (" + twidentity.ProductName.Get() + ")";
-
-            // Strip off unsafe chars.  Sadly, mono let's us down here...
-            twain.ProductDirectory = CSV.Parse(szIdentity)[11];
-            foreach (char c in new char [41]
-                            { '\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07',
-                              '\x08', '\x09', '\x0A', '\x0B', '\x0C', '\x0D', '\x0E', '\x0F', '\x10', '\x11', '\x12', 
-                              '\x13', '\x14', '\x15', '\x16', '\x17', '\x18', '\x19', '\x1A', '\x1B', '\x1C', '\x1D', 
-                              '\x1E', '\x1F', '\x22', '\x3C', '\x3E', '\x7C', ':', '*', '?', '\\', '/'
-                            }
-                    )
-            {
-                twain.ProductDirectory = twain.ProductDirectory.Replace(c, '_');
-            }
-
+            twain.OpenScanner(szIdentity);
             // twain.AutoScan();
             // twain.EnableDuplex();
             twain.NativeTransfer();
             twain.AutoFeed();
             twain.ProgressDriverUI(true);
-        
+
             m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
             SetButtons(EBUTTONSTATE.OPEN);
-            Console.WriteLine("OPENED");
         }
 
         private void m_buttonClose_Click(object sender, EventArgs e)

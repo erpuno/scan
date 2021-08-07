@@ -113,7 +113,7 @@ namespace INFOTECH {
             sts = Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
             Console.WriteLine("Duplex(1): {0}", sts);
             if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
-	}
+        }
 
         public void ProgressDriverUI(bool indicators)
         {
@@ -127,6 +127,30 @@ namespace INFOTECH {
             if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
         }
 
-    }
+        public string OpenScanner(string szIdentity)
+        {
+            // Make it the default, we don't care if this succeeds...
+            TWAIN.STS sts;
 
+            TWAIN.TW_IDENTITY twidentity = default(TWAIN.TW_IDENTITY);
+            TWAIN.CsvToIdentity(ref twidentity, szIdentity);
+            Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twidentity);
+
+            // Open it...
+            sts = Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.OPENDS, ref twidentity);
+            Console.WriteLine("OpenDS: {0}", sts);
+            if (sts != TWAIN.STS.SUCCESS) {
+                MessageBox.Show("Неможливо відкрити сканер (перевірте фізичне підключення та електричне ввімкнення)"); Exit = true; return ""; }
+
+            ProductDirectory = CSV.Parse(szIdentity)[11];
+            foreach (char c in new char [41]
+                            { '\x00', '\x01', '\x02', '\x03', '\x04', '\x05', '\x06', '\x07',
+                              '\x08', '\x09', '\x0A', '\x0B', '\x0C', '\x0D', '\x0E', '\x0F', '\x10', '\x11', '\x12',
+                              '\x13', '\x14', '\x15', '\x16', '\x17', '\x18', '\x19', '\x1A', '\x1B', '\x1C', '\x1D',
+                              '\x1E', '\x1F', '\x22', '\x3C', '\x3E', '\x7C', ':', '*', '?', '\\', '/' } )
+            { ProductDirectory = ProductDirectory.Replace(c, '_'); }
+
+            return ProductDirectory;
+        }
+    }
 }
