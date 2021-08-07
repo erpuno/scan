@@ -291,7 +291,7 @@ namespace INFOTECH
 
         private TWAIN.STS ScanCallbackNative(bool a_blClosing)
         {
-            Console.WriteLine("Scan Callback Entered: {0} Sate {1} AfterScan {2}", a_blClosing, twain.Twain.GetState(), twain.AfterScan);
+            Console.WriteLine("Scan Callback Entered: {0} Sate {1}", a_blClosing, twain.Twain.GetState());
 
             bool blXferDone = false;
             TWAIN.STS sts;
@@ -506,13 +506,15 @@ namespace INFOTECH
             else { szTwmemref = "TRUE,FALSE," + this.Handle; }
 
             ClearEvents();
+
             TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);
             twain.Twain.CsvToUserinterface(ref twuserinterface, szTwmemref);
             sts = twain.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.ENABLEDS, ref twuserinterface); // SCAN SEQ
-            if (sts == TWAIN.STS.SUCCESS)
-            {
-                SetButtons(EBUTTONSTATE.SCANNING);
-            }
+
+            if (twuserinterface.ShowUI != 0) { twain.AfterScan = TWAIN.STATE.S5; }
+            else { twain.AfterScan = TWAIN.STATE.S4; }
+
+            if (sts == TWAIN.STS.SUCCESS) { SetButtons(EBUTTONSTATE.SCANNING); }
         }
 
         public void ClearEvents()
