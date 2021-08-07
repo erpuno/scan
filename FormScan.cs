@@ -114,7 +114,7 @@ namespace INFOTECH
             }
             catch (Exception exception)
             {
-                TWAIN32.Log.Error("exception - " + exception.Message);
+                TWAIN32.Log.Error("Exception - " + exception.Message);
                 twain.Twain = null;
                 twain.Exit = true;
                 MessageBox.Show
@@ -125,7 +125,7 @@ namespace INFOTECH
                     "installed, you should be able to proceed.\n\n" +
                     "You can also try the following link:\n" +
                     "https://github.com/erpuno/scan",
-                    "Error Starting MIA: Scanning"
+                    "Error Starting «MIA: Scanning»"
                 );
                 return;
             }
@@ -162,23 +162,12 @@ namespace INFOTECH
             return (true);
         }
 
-        /// <summary>
-        /// Turn message filtering on or off, we use this to capture stuff
-        /// like MSG_XFERREADY.  If it's off, then it's assumed we're getting
-        /// this info through DAT_CALLBACK2...
-        /// </summary>
-        /// <param name="a_blAdd">True to turn it on</param>
         public void SetMessageFilter(bool a_blAdd)
         {
             if (a_blAdd) { Application.AddMessageFilter(this); }
                     else { Application.RemoveMessageFilter(this); }
         }
 
-        /// <summary>
-        /// Restore a snapshot of driver values...
-        /// </summary>
-        /// <param name="a_szFile">File to use to restore driver settings</param>
-        /// <returns>SUCCESS if the restore succeeded</returns>
         [PermissionSet(SecurityAction.LinkDemand, Name = "FullTrust", Unrestricted = false)]
         public TWAIN.STS RestoreSnapshot(string a_szFile)
         {
@@ -231,11 +220,6 @@ namespace INFOTECH
             return (sts);
         }
 
-        /// <summary>
-        /// Save a snapshot of the driver values...
-        /// </summary>
-        /// <param name="a_szFile">File to receive driver settings</param>
-        /// <returns>SUCCESS if the restore succeeded</returns>
         [PermissionSet(SecurityAction.LinkDemand, Name = "FullTrust", Unrestricted = false)]
         public TWAIN.STS SaveSnapshot(string a_szFile)
         {
