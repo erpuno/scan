@@ -12,14 +12,15 @@ It supports unread messages counter and native system notifications:
 Features
 --------
 
+* .NET Framework 4.8 Target for Zero Dependency
+* TWAIN32 flavour for legacy scanners support
 * Windows Tray Application
-* Multiple Scan-Profiles
-* Zero-dependency
-* Single file distribution
-* Small executable (300K)
-* Kodak Alaris C# SDK
-* TWAIN32 flavour for the sake of coverage
-* Built-in F# WebSocket server
+* System Notification
+* Multiple Scan-Profile per data source
+* Small Executable (300K)
+* Kodak Alaris C# TWAIN SDK
+* INFOTECH F# WebSocket server
+* Xamarin MQTT client
 * Supports <a href="https://crm.erp.uno">МІА: Документообіг</a>
 
 Build
