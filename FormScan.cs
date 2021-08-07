@@ -1,3 +1,5 @@
+// MICROSOFT
+
 using System;
 using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
@@ -9,12 +11,25 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Security.Permissions;
 using System.Windows.Forms;
+
+// KODAK
+
 using TWAIN32;
+
+// EMPIRA
 
 using PdfSharp;
 using PdfSharp.Pdf;
 using PdfSharp.Pdf.IO;
 using PdfSharp.Drawing;
+
+// XAMARIN
+
+using System.Net.Mqtt;
+
+// INFOTECH
+
+using N2O;
 
 namespace INFOTECH
 {

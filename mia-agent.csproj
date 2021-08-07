@@ -56,7 +56,6 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System.Core" />
-    <!--Reference Include="System.Resources.Extensions" /-->
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -79,9 +78,14 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\PdfSharp.dll</HintPath>
     </Reference>
+    <Reference Include="System.Net.Mqtt">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resources\System.Net.Mqtt.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <!--PackageReference Include="System.Resources.Extensions" /-->
+    <PackageReference Include="System.Net.Mqtt"/>
+    <PackageReference Include="PdfSharp"/>
     <Compile Include="FormScan.cs"><SubType>Form</SubType></Compile>
     <Compile Include="FormScan.Designer.cs"><DependentUpon>FormScan.cs</DependentUpon></Compile>
     <Compile Include="FormSetup.cs"><SubType>Form</SubType></Compile>
@@ -89,9 +93,9 @@
     <Compile Include="FormSelect.cs"><SubType>Form</SubType></Compile>
     <Compile Include="FormSelect.Designer.cs"><DependentUpon>FormSelect.cs</DependentUpon></Compile>
     <Compile Include="Program.cs" />
-    <Compile Include="TWAIN\TWAIN.cs"/>
-    <Compile Include="TWAIN\TWAINH.cs"/>
-    <Compile Include="TWAIN\TWAINI.cs"/>
+    <Compile Include="TWAIN\TWAIN.cs" />
+    <Compile Include="TWAIN\TWAINH.cs" />
+    <Compile Include="TWAIN\TWAINI.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FormScan.resx"><DependentUpon>FormScan.cs</DependentUpon></EmbeddedResource>
     <EmbeddedResource Include="FormSelect.resx"><DependentUpon>FormSelect.cs</DependentUpon></EmbeddedResource>
