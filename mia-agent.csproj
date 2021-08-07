@@ -71,6 +71,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\ws.exe</HintPath>
     </Reference>
+    <Reference Include="FSharp.Core">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resources\FSharp.Core.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <!--PackageReference Include="System.Resources.Extensions" /-->
