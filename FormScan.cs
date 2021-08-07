@@ -343,7 +343,7 @@ namespace INFOTECH
                 Console.WriteLine("ImageNativeXfer(): {0}", sts);
                 if (bitmap != null) Console.WriteLine("NATIVE GET: {0} {1} {2}", bitmap.Size, twain.ImageCount++, m_formsetup.GetImageFolder());
                 string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img" + string.Format("{0:D6}", twain.ImageCount)) + ".tif";
-                
+
                 if (sts != TWAIN.STS.XFERDONE)
                 {
                     Console.WriteLine("Scanning error: {0}", sts);
@@ -443,7 +443,7 @@ namespace INFOTECH
                         TWAIN.TW_PENDINGXFERS twpendingxfersStopFeeder = default(TWAIN.TW_PENDINGXFERS);
                         sts = twain.Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.STOPFEEDER, ref twpendingxfersStopFeeder);
                         Console.WriteLine("Pending Stop Feeder: {0}", sts);
-                       
+
                         if (sts != TWAIN.STS.SUCCESS)
                         {
                             // If we can't stop gracefully, then just abort...
