@@ -13,15 +13,15 @@ Features
 --------
 
 * .NET Framework 4.8 Target for Zero Dependency
-* TWAIN32 flavour for legacy scanners support
+* TWAIN 32/64 version 2.5
 * Windows Tray Application
 * System Notification
 * Multiple Scan-Profile per data source
-* Small Executable (300K)
+* Small Executable 300K
 * Kodak Alaris C# TWAIN SDK
 * INFOTECH F# WebSocket server (port 50220)
-* Xamarin MQTT client
-* Supports <a href="https://crm.erp.uno">МІА: Документообіг</a>
+* Xamarin C# MQTT client
+* <a href="https://crm.erp.uno">МІА: Документообіг</a> Companion Application
 
 Build
 -----
