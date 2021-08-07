@@ -12,7 +12,7 @@ It supports unread messages counter and native system notifications:
 Features
 --------
 
-* .NET Framework 4.8 Target for Zero Dependency
+* .NET Framework 4.6 Target for Zero Dependency
 * TWAIN 32/64-bit protocol version 2.5
 * Windows Tray Application
 * System Notification
