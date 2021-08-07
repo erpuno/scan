@@ -22,10 +22,10 @@ Features
 Dependencies
 ------------
 
-* Kodak Alaris C# TWAIN SDK
-* Empira C# PDF SDK
-* INFOTECH F# WebSocket server
-* Xamarin C# MQTT client
+* Kodak Alaris C# TWAIN SDK (256KB)
+* Empira C# PDF SDK (700KB)
+* INFOTECH F# WebSocket server (64KB)
+* Xamarin C# MQTT client (160KB)
 
 Build
 -----
