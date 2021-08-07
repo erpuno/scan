@@ -99,6 +99,7 @@ namespace INFOTECH
             this.Resize += WindowResize;
             this.Text = "MIA: Сканування";
             this.FormClosing += WindowClosing;
+            
 
             TWAIN32.Log.Open("INFOTECH", ".", 1);
             TWAIN32.Log.Info("INFOTECH v" + System.Reflection.Assembly.GetEntryAssembly().GetName().Version.ToString());
@@ -293,23 +294,35 @@ namespace INFOTECH
 
         private TWAIN.STS ScanCallbackNative(bool a_blClosing)
         {
-            Console.WriteLine("Scan Callback Entered: {0}", a_blClosing);
+            Console.WriteLine("Scan Callback Entered: {0} Sate {1} AfterScan {2}", a_blClosing, twain.Twain.GetState(), twain.AfterScan);
 
             bool blXferDone = false;
             TWAIN.STS sts;
             TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);
             TWAIN.MSG twainmsg;
             TWAIN.TW_IMAGEINFO twimageinfo = default(TWAIN.TW_IMAGEINFO);
-
-            if (twain.Twain == null) {
-                Log.Error("twain.Twain is null...");
-                return (TWAIN.STS.FAILURE);
-            }
-
+            if (twain.Twain == null) { return (TWAIN.STS.FAILURE); }
             if (a_blClosing) { return (TWAIN.STS.SUCCESS); }
 
-            if (twain.Twain.IsMsgCloseDsReq()) { twain.Twain.Rollback(TWAIN.STATE.S4); return (TWAIN.STS.SUCCESS); }
-            else if (twain.Twain.IsMsgCloseDsOk()) { twain.Twain.Rollback(TWAIN.STATE.S4); return (TWAIN.STS.SUCCESS); }
+            Console.WriteLine("Scan Callback IsMsgCloseDsReq {0}", twain.Twain.IsMsgCloseDsReq());
+            Console.WriteLine("Scan Callback m_blDisableDsSent {0}", !twain.DisableDsSent);
+            if (twain.Twain.IsMsgCloseDsReq() && !twain.DisableDsSent)
+            {
+                twain.DisableDsSent = true;
+                twain.Rollback(TWAIN.STATE.S4);
+                SetButtons(EBUTTONSTATE.OPEN);
+            }
+
+
+            // Handle DAT_NULL/MSG_CLOSEDSOK...
+            Console.WriteLine("Scan Callback IsMsgCloseDsOk {0}", twain.Twain.IsMsgCloseDsOk());
+            Console.WriteLine("Scan Callback m_blDisableDsSent {0}", !twain.DisableDsSent);
+            if (twain.Twain.IsMsgCloseDsOk() && !twain.DisableDsSent)
+            {
+                twain.DisableDsSent = true;
+                twain.Rollback(TWAIN.STATE.S4);
+                SetButtons(EBUTTONSTATE.OPEN);
+            }
 
             if (twain.ScanStart) {
                 TWAIN.TW_CAPABILITY twcapability;
@@ -318,6 +331,42 @@ namespace INFOTECH
                 twcapability = default(TWAIN.TW_CAPABILITY);
                 twcapability.Cap = TWAIN.CAP.ICAP_XFERMECH;
                 twain.XferMech = TWAIN.TWSX.NATIVE;
+            }
+
+            switch (twain.Twain.GetState())
+            {
+                default:
+                    return TWAIN.STS.SUCCESS;
+
+                case TWAIN.STATE.S5:
+                    twain.DisableDsSent = true;
+                    twain.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.DISABLEDS, ref twuserinterface);
+                    SetButtons(EBUTTONSTATE.OPEN);
+                    return TWAIN.STS.SUCCESS;
+
+                case TWAIN.STATE.S6:
+                    switch (twain.PendingXfers)
+                    {
+                        default:
+                        case TWAIN.MSG.ENDXFER:
+                            Console.WriteLine("Pending End");
+                            break;
+
+                        case TWAIN.MSG.RESET:
+                            Console.WriteLine("Pending Reset");
+                            twain.PendingXfers = TWAIN.MSG.ENDXFER;
+                            twain.Twain.Rollback(twain.AfterScan);
+                            return TWAIN.STS.SUCCESS;
+
+                        case TWAIN.MSG.STOPFEEDER:
+                            twain.PendingXfers = TWAIN.MSG.ENDXFER;
+                            TWAIN.TW_PENDINGXFERS twpendingxfersStopFeeder = default(TWAIN.TW_PENDINGXFERS);
+                            sts = twain.Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.STOPFEEDER, ref twpendingxfersStopFeeder);
+                            Console.WriteLine("Pending Stop Feeder: {0}", sts);
+                            if (sts != TWAIN.STS.SUCCESS) { twain.Twain.Rollback(twain.AfterScan); return (TWAIN.STS.SUCCESS); }
+                            break;
+                   }
+                   break;
             }
 
             if (twain.XferMech == TWAIN.TWSX.NATIVE)
@@ -359,6 +408,7 @@ namespace INFOTECH
                 return (TWAIN.STS.SUCCESS);
             }
 
+            // Get Image Info (Resolution)
             if (blXferDone)
             {
                 if (twimageinfo.BitsPerPixel == 0)
@@ -375,67 +425,15 @@ namespace INFOTECH
                 Console.WriteLine("ImageInfo: " + TWAIN.ImageinfoToCsv(twimageinfo));
             }
 
+            // Finalize transport
             TWAIN.TW_PENDINGXFERS twpendingxfersEndXfer = default(TWAIN.TW_PENDINGXFERS);
             sts = twain.Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.ENDXFER, ref twpendingxfersEndXfer);
             Console.WriteLine("END XFER: {0} {1}", twpendingxfersEndXfer.Count, twpendingxfersEndXfer.EOJ);
             if (sts != TWAIN.STS.SUCCESS)
             {
-                Console.WriteLine("Scanning error: " + sts + Environment.NewLine);
+                Console.WriteLine("Scanning error: " + sts);
                 twain.Twain.Rollback(twain.AfterScan);
                 return (TWAIN.STS.SUCCESS);
-            }
-
-            // Handle DAT_NULL/MSG_CLOSEDSREQ...
-            if (twain.Twain.IsMsgCloseDsReq() && !twain.DisableDsSent)
-            {
-                twain.DisableDsSent = true;
-                twain.Rollback(TWAIN.STATE.S4);
-                SetButtons(EBUTTONSTATE.OPEN);
-            }
-
-            // Handle DAT_NULL/MSG_CLOSEDSOK...
-            if (twain.Twain.IsMsgCloseDsOk() && !twain.DisableDsSent)
-            {
-                twain.DisableDsSent = true;
-                twain.Rollback(TWAIN.STATE.S4);
-                SetButtons(EBUTTONSTATE.OPEN);
-            }
-
-            Application.DoEvents();
-            BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
-
-            if (twain.Twain.GetState() == TWAIN.STATE.S6)
-            {
-                switch (twain.PendingXfers)
-                {
-                    // No work needed here...
-                    default:
-                    case TWAIN.MSG.ENDXFER:
-                        Console.WriteLine("Pending End");
-                        break;
-
-                    // Reset, we're exiting from scanning...
-                    case TWAIN.MSG.RESET:
-                        Console.WriteLine("Pending Reset");
-                        twain.PendingXfers = TWAIN.MSG.ENDXFER;
-                        twain.Twain.Rollback(twain.AfterScan);
-                        return (TWAIN.STS.SUCCESS);
-
-                    // Stop the feeder...
-                    case TWAIN.MSG.STOPFEEDER:
-                        twain.PendingXfers = TWAIN.MSG.ENDXFER;
-                        TWAIN.TW_PENDINGXFERS twpendingxfersStopFeeder = default(TWAIN.TW_PENDINGXFERS);
-                        sts = twain.Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.STOPFEEDER, ref twpendingxfersStopFeeder);
-                        Console.WriteLine("Pending Stop Feeder: {0}", sts);
-
-                        if (sts != TWAIN.STS.SUCCESS)
-                        {
-                            // If we can't stop gracefully, then just abort...
-                            twain.Twain.Rollback(twain.AfterScan);
-                            return (TWAIN.STS.SUCCESS);
-                        }
-                        break;
-                }
             }
 
             if (twpendingxfersEndXfer.Count == 0)
@@ -448,6 +446,9 @@ namespace INFOTECH
                 SetButtons(EBUTTONSTATE.OPEN);
                 twain.ScanStart = true;
             }
+
+            Application.DoEvents();
+            BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
 
             // All done...
             return (TWAIN.STS.SUCCESS);
@@ -726,71 +727,14 @@ namespace INFOTECH
                 twain.ProductDirectory = twain.ProductDirectory.Replace(c, '_');
             }
 
-            // We're doing memory transfers...
-            szStatus = "";
-            twcapability = default(TWAIN.TW_CAPABILITY);
-            twain.Twain.CsvToCapability(ref twcapability, ref szStatus, "ICAP_XFERMECH,TWON_ONEVALUE,TWTY_UINT16,TWSX_NATIVE");
-            sts = twain.Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
-            Console.WriteLine("XferMechanism(Native): {0}", sts);
-            if (sts != TWAIN.STS.SUCCESS)
-            {
-                twain.Exit = true;
-                return;
-            }
-
-            // We're doing memory transfers...
-            szStatus = "";
-            twcapability = default(TWAIN.TW_CAPABILITY);
-            twain.Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_AUTOFEED,TWON_ONEVALUE,TWTY_BOOL,TRUE");
-            sts = twain.Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
-            Console.WriteLine("AutoFeed(1): {0}", sts);
-            if (sts != TWAIN.STS.SUCCESS)
-            {
-                twain.Exit = true;
-                return;
-            }
-
-            // We're doing memory transfers...
-            szStatus = "";
-            twcapability = default(TWAIN.TW_CAPABILITY);
-            twain.Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_AUTOSCAN,TWON_ONEVALUE,TWTY_BOOL,TRUE");
-            sts = twain.Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
-            Console.WriteLine("AutoScan(1): {0}", sts);
-            if (sts != TWAIN.STS.SUCCESS)
-            {
-                twain.Exit = true;
-                return;
-            }
-
-            // We're doing memory transfers...
-            szStatus = "";
-            twcapability = default(TWAIN.TW_CAPABILITY);
-            twain.Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_DUPLEXENABLED,TWON_ONEVALUE,TWTY_BOOL,TRUE");
-            sts = twain.Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
-            Console.WriteLine("Duplex(1): {0}", sts);
-            if (sts != TWAIN.STS.SUCCESS)
-            {
-                twain.Exit = true;
-                return;
-            }
-
-            // Decide whether or not to show the driver's window messages...
-            szStatus = "";
-            twcapability = default(TWAIN.TW_CAPABILITY);
-            twain.Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_INDICATORS,TWON_ONEVALUE,TWTY_BOOL," + (twain.Indicators ? "TRUE" : "FALSE"));
-            sts = twain.Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
-            Console.WriteLine("Indicators(1): {0}", sts);
-            if (sts != TWAIN.STS.SUCCESS)
-            {
-                twain.Exit = true;
-                return;
-            }
-
-            // New state...
-            SetButtons(EBUTTONSTATE.OPEN);
-
-            // Create the setup form...
+            // twain.AutoScan();
+            // twain.EnableDuplex();
+            twain.NativeTransfer();
+            twain.AutoFeed();
+            twain.ProgressDriverUI(true);
+        
             m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
+            SetButtons(EBUTTONSTATE.OPEN);
             Console.WriteLine("OPENED");
         }
 
@@ -818,6 +762,7 @@ namespace INFOTECH
         }
 
         private FormSetup m_formsetup;
+
         private Bitmap m_bitmapGraphic1;
         private Bitmap m_bitmapGraphic2;
         private Graphics m_graphics1;

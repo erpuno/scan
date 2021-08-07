@@ -71,6 +71,62 @@ namespace INFOTECH {
             if ((Twain.GetState() == TWAIN.STATE.S3) && (a_state < TWAIN.STATE.S3)) { Twain.DatParent(TWAIN.DG.CONTROL, TWAIN.MSG.CLOSEDSM, ref intptrHwnd); }
         }
 
+        public void NativeTransfer()
+        {
+            TWAIN.STS sts;
+            string szStatus = "";
+            TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
+            Twain.CsvToCapability(ref twcapability, ref szStatus, "ICAP_XFERMECH,TWON_ONEVALUE,TWTY_UINT16,TWSX_NATIVE");
+            sts = Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
+            Console.WriteLine("XferMechanism(Native): {0}", sts);
+            if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
+        }
+
+        public void AutoFeed()
+        {
+            TWAIN.STS sts;
+            string szStatus = "";
+            TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
+            Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_AUTOFEED,TWON_ONEVALUE,TWTY_BOOL,TRUE");
+            sts = Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
+            Console.WriteLine("AutoFeed(1): {0}", sts);
+            if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
+        }
+
+        public void AutoScan()
+        {
+            TWAIN.STS sts;
+            string szStatus = "";
+            TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
+            Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_AUTOSCAN,TWON_ONEVALUE,TWTY_BOOL,TRUE");
+            sts = Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
+            Console.WriteLine("AutoScan(1): {0}", sts);
+            if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
+        }
+
+        public void EnableDuplex()
+        {
+            TWAIN.STS sts;
+            string szStatus = "";
+            TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
+            Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_DUPLEXENABLED,TWON_ONEVALUE,TWTY_BOOL,TRUE");
+            sts = Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
+            Console.WriteLine("Duplex(1): {0}", sts);
+            if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
+	}
+
+        public void ProgressDriverUI(bool indicators)
+        {
+            this.Indicators = indicators;
+            TWAIN.STS sts;
+            string szStatus = "";
+            TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
+            Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_INDICATORS,TWON_ONEVALUE,TWTY_BOOL," + (Indicators ? "TRUE" : "FALSE"));
+            sts = Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.SET, ref twcapability);
+            Console.WriteLine("Indicators(1): {0}", sts);
+            if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
+        }
+
     }
 
 }

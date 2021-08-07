@@ -21,13 +21,14 @@ namespace INFOTECH
         [PermissionSet(SecurityAction.LinkDemand, Name = "FullTrust", Unrestricted = false)]
         public FormSetup(FormScan a_formscan, ref TWAIN a_twain, string a_szProductDirectory)
         {
-            TWAIN.STS sts;
+            TWAIN.STS sts = TWAIN.STS.SUCCESS;
             string szStatus;
-            string szCapability;
+            string szCapability = "";
             string szUsrUiSettings;
 
             // Init stuff...
             InitializeComponent();
+            Console.WriteLine("FormSetup constructor");
 
             // More init stuff...
             this.FormClosing += new FormClosingEventHandler(FormSetup_FormClosing);
@@ -36,6 +37,7 @@ namespace INFOTECH
             // Windows:     C:\Users\USERNAME\AppData\Roaming (or C:\Documents and Settings\USERNAME\Application Data on XP)
             // Linux:       /home/USERNAME/.config (or /root/.config for superuser)
             // Mac OS X:    /Users/USERNAME/.config (or /var/root/.config for superuser)
+
             m_formscan = a_formscan;
             m_twain = a_twain;
             m_szTwainscanFolder = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal),"twain"), "INFOTECH");
@@ -64,6 +66,9 @@ namespace INFOTECH
             m_twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_CUSTOMDSDATA,0,0,0");
             sts = m_twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.GETCURRENT, ref twcapability);
             szCapability = m_twain.CapabilityToCsv(twcapability, true);
+            Console.WriteLine("GetCaps(): {0}", sts);
+            Console.WriteLine("Condition: {0}", !szCapability.EndsWith(",1") && !szCapability.EndsWith(",TRUE"));
+
             if ((sts != TWAIN.STS.SUCCESS) || (!szCapability.EndsWith(",1") && !szCapability.EndsWith(",TRUE")))
             {
                 m_labelUseUiSettings.Enabled = false;
@@ -126,11 +131,13 @@ namespace INFOTECH
         {
             if ((m_textboxFolder.Text != "") && !Directory.Exists(m_textboxFolder.Text))
             {
+                Console.WriteLine("Folder: {0}", m_textboxFolder.Text);
                 MessageBox.Show("Please enter a valid Destination Folder.");
                 e.Cancel = true;
             }
             if ((m_textboxUseUiSettings.Text != "") && !File.Exists(Path.Combine(m_szSettingsFolder,m_textboxUseUiSettings.Text)))
             {
+                Console.WriteLine("Combine: {0} {1}", m_szSettingsFolder, m_textboxUseUiSettings.Text);
                 MessageBox.Show("Please enter a valid UI Setting name, or clear the entry.");
                 e.Cancel = true;
             }
@@ -345,10 +352,18 @@ namespace INFOTECH
         /// <param name="e"></param>
         private void m_buttonSetup_Click(object sender, EventArgs e)
         {
+            TWAIN.STS sts;
             m_formscan.ClearEvents();
             TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);
-            m_twain.CsvToUserinterface(ref twuserinterface, "TRUE,FALSE," + Handle);
-            m_twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.ENABLEDSUIONLY, ref twuserinterface);
+
+            string csv;
+            if (IsCustomDsDataSupported()) { csv = "FALSE,FALSE," + this.Handle; }
+            else { csv = "TRUE,FALSE," + this.Handle; }
+            Console.WriteLine("TWAIN UI: [CONTROL] [ENABLEDSUIONLY] CSV: " + csv);
+            m_twain.Rollback(TWAIN.STATE.S2);
+            m_twain.CsvToUserinterface(ref twuserinterface, csv);
+            sts = m_twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.ENABLEDSUIONLY, ref twuserinterface);
+            Console.WriteLine("EnableDSM_UI("+csv+"): {0}", sts);
         }
 
         /// <summary>
