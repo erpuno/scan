@@ -9,15 +9,6 @@ namespace INFOTECH
 {
     public partial class FormSetup : Form
     {
-        ///////////////////////////////////////////////////////////////////////////////
-        // Public Methods...
-        ///////////////////////////////////////////////////////////////////////////////
-        #region Public Methods...
-
-        /// <summary>
-        /// Our constructor...
-        /// </summary>
-        /// <param name="a_twaincstool"></param>
         [PermissionSet(SecurityAction.LinkDemand, Name = "FullTrust", Unrestricted = false)]
         public FormSetup(FormScan a_formscan, ref TWAIN a_twain, string a_szProductDirectory)
         {
@@ -26,11 +17,9 @@ namespace INFOTECH
             string szCapability = "";
             string szUsrUiSettings;
 
-            // Init stuff...
             InitializeComponent();
             Console.WriteLine("FormSetup constructor");
 
-            // More init stuff...
             this.FormClosing += new FormClosingEventHandler(FormSetup_FormClosing);
 
             // Init more stuff (the order matters).  ApplicationData means the following:
@@ -56,11 +45,9 @@ namespace INFOTECH
                 }
             }
 
-            // Restore values...
             m_textboxFolder.Text = RestoreFolder();
             m_textboxUseUiSettings.Text = "";
 
-            // Check for support of Custom DS Data...
             szStatus = "";
             TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
             m_twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_CUSTOMDSDATA,0,0,0");
@@ -76,8 +63,6 @@ namespace INFOTECH
                 m_buttonSaveUiSettings.Enabled = false;
                 m_buttonUseUiSettings.Enabled = false;
             }
-
-            // Restore the last saved snapshot...
             else
             {
                 m_textboxUseUiSettings.Text = RestoreSetting();
@@ -96,37 +81,16 @@ namespace INFOTECH
             }
         }
 
-        /// <summary>
-        /// Let the caller know if we can take snapshots...
-        /// </summary>
-        /// <returns></returns>
         public bool IsCustomDsDataSupported()
         {
             return (m_buttonUseUiSettings.Enabled);
         }
 
-        /// <summary>
-        /// Place to put images (empty is okay)...
-        /// </summary>
-        /// <returns></returns>
         public string GetImageFolder()
         {
             return (m_textboxFolder.Text);
         }
 
-        #endregion
-
-
-        ///////////////////////////////////////////////////////////////////////////////
-        // Private Methods...
-        ///////////////////////////////////////////////////////////////////////////////
-        #region Private Methods...
-
-        /// <summary>
-        /// Validate...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void FormSetup_FormClosing(object sender, FormClosingEventArgs e)
         {
             if ((m_textboxFolder.Text != "") && !Directory.Exists(m_textboxFolder.Text))
@@ -143,10 +107,6 @@ namespace INFOTECH
             }
         }
 
-        /// <summary>
-        /// Get the folder path...
-        /// </summary>
-        /// <returns></returns>
         private string RestoreFolder()
         {
             try
@@ -170,10 +130,6 @@ namespace INFOTECH
             }
         }
 
-        /// <summary>
-        /// Get the setting...
-        /// </summary>
-        /// <returns></returns>
         private string RestoreSetting()
         {
             try
@@ -196,10 +152,6 @@ namespace INFOTECH
             }
         }
 
-        /// <summary>
-        /// Remember the folder path for the next time the app runs...
-        /// </summary>
-        /// <param name="a_szFolder"></param>
         private void SaveFolder(string a_szFolder)
         {
             try
@@ -214,14 +166,9 @@ namespace INFOTECH
             catch (Exception exception)
             {
                 TWAIN32.Log.Error("exception - " + exception.Message);
-                // Just let it slide...
             }
         }
 
-        /// <summary>
-        /// Remember the setting for the next time the app runs...
-        /// </summary>
-        /// <param name="a_szFolder"></param>
         private void SaveSetting(string a_szFolder)
         {
             try
@@ -235,23 +182,9 @@ namespace INFOTECH
             catch (Exception exception)
             {
                 TWAIN32.Log.Error("exception - " + exception.Message);
-                // Just let it slide...
             }
         }
 
-        #endregion
-
-
-        ///////////////////////////////////////////////////////////////////////////////
-        // Private Form Controls...
-        ///////////////////////////////////////////////////////////////////////////////
-        #region Private Form Controls...
-
-        /// <summary>
-        /// Browse for a place to save image files...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonBrowse_Click(object sender, EventArgs e)
         {
             FolderBrowserDialog folderbrowserdialog = new FolderBrowserDialog();
@@ -264,36 +197,20 @@ namespace INFOTECH
             }
         }
 
-        /// <summary>
-        /// Delete the setting...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonDeleteSetting_Click(object sender, EventArgs e)
         {
             bool blDeleted;
 
-            // Nothing to do if it's empty...
-            if (m_textboxUseUiSettings.Text == "")
-            {
-                return;
-            }
+            if (m_textboxUseUiSettings.Text == "") { return; }
 
-            // If it's not real, tell the user...
-            if (!File.Exists(Path.Combine(m_szSettingsFolder, m_textboxUseUiSettings.Text)))
-            {
+            if (!File.Exists(Path.Combine(m_szSettingsFolder, m_textboxUseUiSettings.Text))) {
                 MessageBox.Show("'" + m_textboxUseUiSettings.Text + "' not found...");
                 return;
             }
 
-            // Get confirmation...
             DialogResult dialogresult = MessageBox.Show("Delete '" + m_textboxUseUiSettings.Text + "'?","Confirm",MessageBoxButtons.YesNo);
-            if (dialogresult == System.Windows.Forms.DialogResult.No)
-            {
-                return;
-            }
+            if (dialogresult == System.Windows.Forms.DialogResult.No) { return; }
 
-            // Delete it...
             try
             {
                 blDeleted = true;
@@ -306,18 +223,9 @@ namespace INFOTECH
                 MessageBox.Show("Failed to delete setting...");
             }
 
-            // Clear the text box...
-            if (blDeleted)
-            {
-                m_textboxUseUiSettings.Text = "";
-            }
+            if (blDeleted) { m_textboxUseUiSettings.Text = ""; }
         }
 
-        /// <summary>
-        /// Save the current driver's settings...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonSaveas_Click(object sender, EventArgs e)
         {
             SaveFileDialog savefiledialog = new SaveFileDialog();
@@ -345,11 +253,6 @@ namespace INFOTECH
             }
         }
 
-        /// <summary>
-        /// Bring up the driver's non-scanning UI...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonSetup_Click(object sender, EventArgs e)
         {
             TWAIN.STS sts;
@@ -366,11 +269,6 @@ namespace INFOTECH
             Console.WriteLine("EnableDSM_UI("+csv+"): {0}", sts);
         }
 
-        /// <summary>
-        /// Pick the settings for a scan session...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonUseUiSettings_Click(object sender, EventArgs e)
         {
             OpenFileDialog openfiledialog = new OpenFileDialog();
@@ -401,44 +299,15 @@ namespace INFOTECH
             }
         }
 
-        /// <summary>
-        /// Keep us updated with changes to the save image path...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_textboxFolder_TextChanged(object sender, EventArgs e)
         {
             SaveFolder(m_textboxFolder.Text);
         }
 
-        #endregion
-
-
-        ///////////////////////////////////////////////////////////////////////////////
-        // Private Attributes...
-        ///////////////////////////////////////////////////////////////////////////////
-        #region Private Attributes...
-
-        /// <summary>
-        /// The folder we persist data to...
-        /// </summary>
         private string m_szTwainscanFolder;
-
-        /// <summary>
-        /// The settings folder...
-        /// </summary>
         private string m_szSettingsFolder;
-
-        /// <summary>
-        /// Access to the TWAIN driver...
-        /// </summary>
         private TWAIN m_twain;
-
-        /// <summary>
-        /// Access to our main form...
-        /// </summary>
         private FormScan m_formscan;
 
-        #endregion
     }
 }
