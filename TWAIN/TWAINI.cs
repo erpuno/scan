@@ -150,7 +150,7 @@ namespace INFOTECH {
                               '\x1E', '\x1F', '\x22', '\x3C', '\x3E', '\x7C', ':', '*', '?', '\\', '/' } )
             { ProductDirectory = ProductDirectory.Replace(c, '_'); }
 
-            return ProductDirectory;
+            return twidentity.ProductName.Get();
         }
     }
 }

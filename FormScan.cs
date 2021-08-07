@@ -691,14 +691,14 @@ namespace INFOTECH
 
             if (twain.Exit) { return; }
 
-            this.Text = "МІА: Сканування (" + twidentity.ProductName.Get() + ")";
-            twain.OpenScanner(szIdentity);
+            string scannerName = twain.OpenScanner(szIdentity);
             // twain.AutoScan();
             // twain.EnableDuplex();
             twain.NativeTransfer();
             twain.AutoFeed();
             twain.ProgressDriverUI(true);
 
+            this.Text = "МІА: Сканування (" + scannerName + ")";
             m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
             SetButtons(EBUTTONSTATE.OPEN);
         }
