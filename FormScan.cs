@@ -17,12 +17,6 @@ namespace INFOTECH
     {
         TWAINI twain = new TWAINI();
 
-//        private bool m_blScanStart = true;
-//        private TWAIN.MSG m_twainmsgPendingXfers;
-//        private TWAIN.TWSX m_twsxXferMech;
-//        private int m_iImageXferCount = 0;
-//        private TWAIN.STATE m_stateAfterScan;
-
         private int counter = 77;
         private System.Windows.Forms.NotifyIcon notifyIcon;
 
@@ -159,44 +153,6 @@ namespace INFOTECH
             ScanCallbackNative((twain.Twain == null) ? true : (twain.Twain.GetState() <= TWAIN.STATE.S3));
         }
 
-        public void Rollback(TWAIN.STATE a_state)
-        {
-            Console.WriteLine("Rollback to state: {0}", a_state);
-
-            TWAIN.TW_PENDINGXFERS twpendingxfers = default(TWAIN.TW_PENDINGXFERS);
-            TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);
-            TWAIN.TW_IDENTITY twidentity = default(TWAIN.TW_IDENTITY);
-
-            if (twain.Twain == null) { return; }
-
-            // 7 --> 6
-            if ((twain.Twain.GetState() == TWAIN.STATE.S7) && (a_state < TWAIN.STATE.S7)) {
-                twain.Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.ENDXFER, ref twpendingxfers); }
-
-            // 6 --> 5
-            if ((twain.Twain.GetState() == TWAIN.STATE.S6) && (a_state < TWAIN.STATE.S6)) {
-                twain.Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.RESET, ref twpendingxfers); }
-
-            // 5 --> 4
-            if ((twain.Twain.GetState() == TWAIN.STATE.S5) && (a_state < TWAIN.STATE.S5)) {
-                twain.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.DISABLEDS, ref twuserinterface); }
-
-            // 4 --> 3
-            if ((twain.Twain.GetState() == TWAIN.STATE.S4) && (a_state < TWAIN.STATE.S4)) {
-                TWAIN.CsvToIdentity(ref twidentity, twain.Twain.GetDsIdentity());
-                twain.Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.CLOSEDS, ref twidentity); }
-
-            // 3 --> 2
-            if ((twain.Twain.GetState() == TWAIN.STATE.S3) && (a_state < TWAIN.STATE.S3)) {
-                twain.Twain.DatParent(TWAIN.DG.CONTROL, TWAIN.MSG.CLOSEDSM, ref twain.intptrHwnd); }
-        }
-
-        /// <summary>
-        /// Monitor for DG_CONTROL / DAT_NULL / MSG_* stuff (ex MSG_XFERREADY), this
-        /// function is only triggered when SetMessageFilter() is called with 'true'...
-        /// </summary>
-        /// <param name="a_message">Message to process</param>
-        /// <returns>Result of the processing</returns>
         [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         public bool PreFilterMessage(ref Message a_message)
         {
@@ -353,9 +309,9 @@ namespace INFOTECH
 
         private TWAIN.STS ScanCallbackNative(bool a_blClosing)
         {
-            Console.WriteLine("Scan Callback: {0}", a_blClosing);
+            Console.WriteLine("Scan Callback Entered: {0}", a_blClosing);
 
-            bool blXferDone;
+            bool blXferDone = false;
             TWAIN.STS sts;
             TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);
             TWAIN.MSG twainmsg;
@@ -366,39 +322,19 @@ namespace INFOTECH
                 return (TWAIN.STS.FAILURE);
             }
 
-            // We're leaving...
             if (a_blClosing) { return (TWAIN.STS.SUCCESS); }
 
-            // Somebody pushed the Cancel or the OK button...
-            if (twain.Twain.IsMsgCloseDsReq())
-            {
-                twain.Twain.Rollback(TWAIN.STATE.S4);
-                return (TWAIN.STS.SUCCESS);
-            }
-            else if (twain.Twain.IsMsgCloseDsOk())
-            {
-                twain.Twain.Rollback(TWAIN.STATE.S4);
-                return (TWAIN.STS.SUCCESS);
-            }
+            if (twain.Twain.IsMsgCloseDsReq()) { twain.Twain.Rollback(TWAIN.STATE.S4); return (TWAIN.STS.SUCCESS); }
+            else if (twain.Twain.IsMsgCloseDsOk()) { twain.Twain.Rollback(TWAIN.STATE.S4); return (TWAIN.STS.SUCCESS); }
 
-            // Init ourselves...
-            if (twain.ScanStart)
-            {
+            if (twain.ScanStart) {
                 TWAIN.TW_CAPABILITY twcapability;
-
-                // Don't come in here again until the start of the next scan batch...
                 twain.ScanStart = false;
-
-                // Clear this...
                 twain.PendingXfers = TWAIN.MSG.ENDXFER;
-
-                // Get the current setting for the image transfer...
                 twcapability = default(TWAIN.TW_CAPABILITY);
                 twcapability.Cap = TWAIN.CAP.ICAP_XFERMECH;
                 twain.XferMech = TWAIN.TWSX.NATIVE;
             }
-
-            blXferDone = false;
 
             if (twain.XferMech == TWAIN.TWSX.NATIVE)
             {
@@ -439,15 +375,6 @@ namespace INFOTECH
                 return (TWAIN.STS.SUCCESS);
             }
 
-
-            //
-            // End of the image transfer section...
-            //
-            ///////////////////////////////////////////////////////////////////////////////
-
-
-            // Let's get some meta data.  TWAIN only guarantees that this data
-            // is accurate in state 7 after TWRC_XFERDONE has been received...
             if (blXferDone)
             {
                 if (twimageinfo.BitsPerPixel == 0)
@@ -478,7 +405,7 @@ namespace INFOTECH
             if (twain.Twain.IsMsgCloseDsReq() && !twain.DisableDsSent)
             {
                 twain.DisableDsSent = true;
-                Rollback(TWAIN.STATE.S4);
+                twain.Rollback(TWAIN.STATE.S4);
                 SetButtons(EBUTTONSTATE.OPEN);
             }
 
@@ -486,7 +413,7 @@ namespace INFOTECH
             if (twain.Twain.IsMsgCloseDsOk() && !twain.DisableDsSent)
             {
                 twain.DisableDsSent = true;
-                Rollback(TWAIN.STATE.S4);
+                twain.Rollback(TWAIN.STATE.S4);
                 SetButtons(EBUTTONSTATE.OPEN);
             }
 
@@ -527,18 +454,10 @@ namespace INFOTECH
                 }
             }
 
-            // If count goes to zero, then the session is complete, and the
-            // driver goes to state 5, otherwise it goes to state 6 in
-            // preperation for the next image.  We'll also return a value of
-            // zero if the transfer hits an error, like a paper jam.  And then,
-            // just to keep it interesting, we also need to pay attention to
-            // whether or not we have a UI running.  If we don't, then state 5
-            // is our target, otherwise we want to go to state 4 (programmatic
-            // mode)...
             if (twpendingxfersEndXfer.Count == 0)
             {
                 Console.WriteLine("Scanning done: " + TWAIN.STS.SUCCESS);
-                Rollback(TWAIN.STATE.S4);
+                twain.Rollback(TWAIN.STATE.S4);
 
                 twain.DisableDsSent = true;
                 twain.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.DISABLEDS, ref twuserinterface);
@@ -551,10 +470,6 @@ namespace INFOTECH
 
         }
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         [SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
         [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected override void Dispose(bool disposing)
@@ -607,18 +522,9 @@ namespace INFOTECH
             string szTwmemref;
             TWAIN.STS sts;
 
-            // Silently start scanning if we detect that customdsdata is supported,
-            // otherwise bring up the driver GUI so the user can change settings...
-            if (m_formsetup.IsCustomDsDataSupported())
-            {
-                szTwmemref = "FALSE,FALSE," + this.Handle;
-            }
-            else
-            {
-                szTwmemref = "TRUE,FALSE," + this.Handle;
-            }
+            if (m_formsetup.IsCustomDsDataSupported()) { szTwmemref = "FALSE,FALSE," + this.Handle; }
+            else { szTwmemref = "TRUE,FALSE," + this.Handle; }
 
-            // Send the command...
             ClearEvents();
             TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);
             twain.Twain.CsvToUserinterface(ref twuserinterface, szTwmemref);
@@ -629,23 +535,12 @@ namespace INFOTECH
             }
         }
 
-        /// <summary>
-        /// Clear our event list, and reset our event...
-        /// </summary>
-
         public void ClearEvents()
         {
             twain.XferReadySent = false;
             twain.DisableDsSent = false;
         }
 
-        /// <summary>
-        /// Load an image into a picture box, maintain its aspect ratio...
-        /// </summary>
-        /// <param name="a_picturebox"></param>
-        /// <param name="a_graphics"></param>
-        /// <param name="a_bitmapGraphic"></param>
-        /// <param name="a_bitmap"></param>
         private void LoadImage(ref PictureBox a_picturebox, ref Graphics a_graphics, ref Bitmap a_bitmapGraphic, Bitmap a_bitmap)
         {
             // We want to maintain the aspect ratio...
@@ -662,10 +557,6 @@ namespace INFOTECH
             a_picturebox.Update();
         }
 
-        /// <summary>
-        /// Initialize the picture boxes and the graphics to support them, we're
-        /// doing this to maximize performance during scanner...
-        /// </summary>
         private void InitImage()
         {
             // Make sure our picture boxes don't do much work...
@@ -692,22 +583,11 @@ namespace INFOTECH
             m_rectangleBackground = new Rectangle(0, 0, m_bitmapGraphic1.Width, m_bitmapGraphic1.Height);
         }
 
-        /// <summary>
-        /// TWAIN needs help, if we want it to run stuff in our main
-        /// UI thread...
-        /// </summary>
-        /// <param name="code">the code to run</param>
         private void RunInUiThread(Action a_action)
         {
             RunInUiThread(this, a_action);
         }
 
-        /// <summary>
-        /// TWAIN needs help, if we want it to run stuff in our main
-        /// UI thread...
-        /// </summary>
-        /// <param name="control">the control to run in</param>
-        /// <param name="code">the code to run</param>
         static public void RunInUiThread(Object a_object, Action a_action)
         {
             Control control = (Control)a_object;
@@ -719,10 +599,6 @@ namespace INFOTECH
             a_action();
         }
 
-        /// <summary>
-        /// Configure our buttons to match our current state...
-        /// </summary>
-        /// <param name="a_ebuttonstate"></param>
         private void SetButtons(EBUTTONSTATE a_ebuttonstate)
         {
             switch (a_ebuttonstate)
@@ -754,12 +630,6 @@ namespace INFOTECH
             }
         }
 
-
-        /// <summary>
-        /// Select and open a TWAIN driver...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonOpen_Click(object sender, EventArgs e)
         {
             string szIdentity;
@@ -940,25 +810,15 @@ namespace INFOTECH
             Console.WriteLine("OPENED");
         }
 
-        /// <summary>
-        /// Close the currently open TWAIN driver...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonClose_Click(object sender, EventArgs e)
         {
-            Rollback(TWAIN.STATE.S2);
+            twain.Rollback(TWAIN.STATE.S2);
             SetButtons(EBUTTONSTATE.CLOSED);
             m_formsetup.Dispose();
             m_formsetup = null;
             Console.WriteLine("Close Click");
         }
 
-        /// <summary>
-        /// Request that scanning stop (gracefully)...
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void m_buttonStop_Click(object sender, EventArgs e)
         {
             TWAIN.TW_PENDINGXFERS twpendingxfers = default(TWAIN.TW_PENDINGXFERS);
@@ -966,13 +826,6 @@ namespace INFOTECH
             Console.WriteLine("STOP FEEDER: {0}", sts);
         }
 
-        ///////////////////////////////////////////////////////////////////////////////
-        // Private Definitons...
-        ///////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Our button states...
-        /// </summary>
         private enum EBUTTONSTATE
         {
             CLOSED,
@@ -980,45 +833,7 @@ namespace INFOTECH
             SCANNING
         }
 
-        ///////////////////////////////////////////////////////////////////////////////
-        // Private Attributes...
-        ///////////////////////////////////////////////////////////////////////////////
-
-        /// <summary>
-        /// Use if something really bad happens...
-        /// </summary>
-
-/*
-        private bool mblExit;
-        private TWAIN m_twain;
-        private IntPtr m_intptrHwnd;
-        private int m_iUseBitmap;
-        private int m_iImageCount = 0;
-        private bool m_blDisableDsSent = false;
-        private bool m_blXferReadySent = false;
-        private IntPtr m_intptrXfer = IntPtr.Zero;
-        private IntPtr m_intptrImage = IntPtr.Zero;
-        private int m_iImageBytes = 0;
-        private TWAIN.TW_SETUPMEMXFER m_twsetupmemxfer;
-        private string m_szProductDirectory;
-        private bool m_blIndicators;
-*/
-        // Setup information...
         private FormSetup m_formsetup;
-
-        /// <summary>
-        /// We use this name (modified and made file system safe)
-        /// as the place where we'll put customdsdata...
-        /// </summary>
-
-        /// <summary>
-        /// If true, then show the driver's window messages while
-        /// we're scanning.  Set this in the constructor...
-        /// </summary>
-
-        /// <summary>
-        /// Stuff used to display the images...
-        /// </summary>
         private Bitmap m_bitmapGraphic1;
         private Bitmap m_bitmapGraphic2;
         private Graphics m_graphics1;
@@ -1026,11 +841,6 @@ namespace INFOTECH
         private Brush m_brushBackground;
         private Rectangle m_rectangleBackground;
 
-        /// <summary>
-        /// We use this to run code in the context of the caller's UI thread...
-        /// </summary>
-        /// <param name="a_object">object (really a control)</param>
-        /// <param name="a_action">code to run</param>
         public delegate void RunInUiThreadDelegate(Object a_object, Action a_action);
 
     }

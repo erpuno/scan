@@ -46,7 +46,7 @@ namespace INFOTECH {
         public TWAIN.DeviceEventCallback deviceEventCallback;
         public TWAIN.ScanCallback scanCallback;
         public TWAIN.RunInUiThreadDelegate runInUIThreadDelegate;
-
+ 
         [SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
         [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         protected void Dispose(bool disposing) { if (disposing && (Twain != null)) { Twain.Dispose(); Twain = null; } }
@@ -54,7 +54,23 @@ namespace INFOTECH {
         [SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
         [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         public void Dispose() { Dispose(true); GC.SuppressFinalize(this); }
+ 
+        public void Rollback(TWAIN.STATE a_state)
+        {
+            Console.WriteLine("Rollback to state: {0}", a_state);
 
+            TWAIN.TW_PENDINGXFERS twpendingxfers = default(TWAIN.TW_PENDINGXFERS);
+            TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);
+            TWAIN.TW_IDENTITY twidentity = default(TWAIN.TW_IDENTITY);
+
+            if (Twain == null) { return; }
+            if ((Twain.GetState() == TWAIN.STATE.S7) && (a_state < TWAIN.STATE.S7)) { Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.ENDXFER, ref twpendingxfers); }
+            if ((Twain.GetState() == TWAIN.STATE.S6) && (a_state < TWAIN.STATE.S6)) { Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.RESET, ref twpendingxfers); }
+            if ((Twain.GetState() == TWAIN.STATE.S5) && (a_state < TWAIN.STATE.S5)) { Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.DISABLEDS, ref twuserinterface); }
+            if ((Twain.GetState() == TWAIN.STATE.S4) && (a_state < TWAIN.STATE.S4)) { TWAIN.CsvToIdentity(ref twidentity, Twain.GetDsIdentity()); Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.CLOSEDS, ref twidentity); }
+            if ((Twain.GetState() == TWAIN.STATE.S3) && (a_state < TWAIN.STATE.S3)) { Twain.DatParent(TWAIN.DG.CONTROL, TWAIN.MSG.CLOSEDSM, ref intptrHwnd); }
+        }
+      
     }
 
 }
