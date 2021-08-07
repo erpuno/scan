@@ -13,11 +13,10 @@ Features
 --------
 
 * .NET Framework 4.8 Target for Zero Dependency
-* TWAIN 32/64 version 2.5
+* TWAIN 32/64-bit protocol version 2.5
 * Windows Tray Application
 * System Notification
 * Multiple Scan-Profile per data source
-* Small Executable 300K
 * Kodak Alaris C# TWAIN SDK
 * INFOTECH F# WebSocket server (port 50220)
 * Xamarin C# MQTT client
