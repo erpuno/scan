@@ -19,7 +19,7 @@ Features
 * Multiple Scan-Profile per data source
 * Small Executable (300K)
 * Kodak Alaris C# TWAIN SDK
-* INFOTECH F# WebSocket server
+* INFOTECH F# WebSocket server (port 50220)
 * Xamarin MQTT client
 * Supports <a href="https://crm.erp.uno">МІА: Документообіг</a>
 

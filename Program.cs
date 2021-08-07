@@ -8,7 +8,7 @@ namespace INFOTECH
         [STAThread]
         static void Main()
         {
-            N2O.Server.start("0.0.0.0",1900);
+            N2O.Server.start("0.0.0.0", 50220);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
