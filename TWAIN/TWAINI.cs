@@ -127,6 +127,46 @@ namespace INFOTECH {
             if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
         }
 
+        public TWAIN.STS OpenManager()
+        {
+            TWAIN.STS sts;
+            sts = Twain.DatParent(TWAIN.DG.CONTROL, TWAIN.MSG.OPENDSM, ref intptrHwnd);
+            Console.WriteLine("OpenDSM: {0}", sts);
+            return sts;
+	}
+
+        public string GetDefault()
+        {
+            TWAIN.STS sts;
+            TWAIN.TW_IDENTITY twidentity = default(TWAIN.TW_IDENTITY);
+            sts = Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETDEFAULT, ref twidentity);
+            string szDefault = "";
+            if (sts == TWAIN.STS.SUCCESS)
+            {
+                szDefault = TWAIN.IdentityToCsv(twidentity);
+                Console.WriteLine("Identity(Default): {0}", szDefault);
+            }
+            return szDefault;
+        }
+
+
+        public List<string> GetDataSources()
+        {
+            TWAIN.STS sts;
+            TWAIN.TW_IDENTITY twidentity = default(TWAIN.TW_IDENTITY);
+            List<string> lszIdentity = new List<string>();
+            for (sts = Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETFIRST, ref twidentity);
+                 sts != TWAIN.STS.ENDOFLIST;
+                 sts = Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETNEXT, ref twidentity))
+            {
+                string line = TWAIN.IdentityToCsv(twidentity);
+                lszIdentity.Add(line);
+                Console.WriteLine("Scanner({0}): {1}", lszIdentity.Count, line);
+            }
+
+            return lszIdentity;
+        }
+
         public string OpenScanner(string szIdentity)
         {
             // Make it the default, we don't care if this succeeds...

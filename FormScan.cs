@@ -651,79 +651,25 @@ namespace INFOTECH
         {
             string szIdentity;
             string szDefault = "";
-            string szStatus;
             List<string> lszIdentity = new List<string>();
             FormSelect formselect;
             DialogResult dialogresult;
             TWAIN.STS sts;
-            TWAIN.TW_CAPABILITY twcapability;
-            TWAIN.TW_IDENTITY twidentity = default(TWAIN.TW_IDENTITY);
 
-            // Get the default driver...
-            twain.intptrHwnd = this.Handle;
-            sts = twain.Twain.DatParent(TWAIN.DG.CONTROL, TWAIN.MSG.OPENDSM, ref twain.intptrHwnd);
-            Console.WriteLine("STS Token 1: {0}", sts);
-            if (sts != TWAIN.STS.SUCCESS)
-            {
-                MessageBox.Show("OPENDSM failed...");
-                return;
-            }
+            sts = twain.OpenManager();
+            if (sts != TWAIN.STS.SUCCESS) { MessageBox.Show("Неможливо відкрити шину джерел даних"); return; }
+            szDefault = twain.GetDefault();
+            lszIdentity = twain.GetDataSources();
+            if (lszIdentity.Count == 0) { MessageBox.Show("На цій ситемі відсутні TWAIN драйвери..."); return; }
 
-            // Get the default driver...
-            sts = twain.Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETDEFAULT, ref twidentity);
-            if (sts == TWAIN.STS.SUCCESS)
-            {
-                szDefault = TWAIN.IdentityToCsv(twidentity);
-                Console.WriteLine("Identity(Default): {0}", szDefault);
-            }
-
-            // Enumerate the drivers...
-            for (sts = twain.Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETFIRST, ref twidentity);
-                 sts != TWAIN.STS.ENDOFLIST;
-                 sts = twain.Twain.DatIdentity(TWAIN.DG.CONTROL, TWAIN.MSG.GETNEXT, ref twidentity))
-            {
-                string line = TWAIN.IdentityToCsv(twidentity);
-                lszIdentity.Add(line);
-                Console.WriteLine("Scanner({0}): {1}", lszIdentity.Count, line);
-            }
-
-            // Ruh-roh...
-            if (lszIdentity.Count == 0)
-            {
-                MessageBox.Show("На цій ситемі відсутні TWAIN драйвери...");
-                return;
-            }
-
-            // Instantiate our form...
             formselect = new FormSelect(lszIdentity, szDefault);
             formselect.StartPosition = FormStartPosition.CenterParent;
             dialogresult = formselect.ShowDialog(this);
-            if (dialogresult != System.Windows.Forms.DialogResult.OK)
-            {
-                twain.Exit = true;
-                return;
-            }
-
-            // Get all the identities...
+            if (dialogresult != System.Windows.Forms.DialogResult.OK) { twain.Exit = true; return; }
             szIdentity = formselect.GetSelectedDriver();
-            if (szIdentity == null)
-            {
-                twain.Exit = true;
-                return;
-            }
-
-            // Get the selected identity...
+            if (szIdentity == null) { twain.Exit = true; return; }
             twain.Exit = true;
-            foreach (string sz in lszIdentity)
-            {
-                if (sz.Contains(szIdentity))
-                {
-                    twain.Exit = false;
-                    szIdentity = sz;
-                    break;
-                }
-            }
-
+            foreach (string sz in lszIdentity) if (sz.Contains(szIdentity)){ twain.Exit = false; szIdentity = sz; break; }
             if (twain.Exit) { return; }
 
             string scannerName = twain.OpenScanner(szIdentity);
