@@ -12,16 +12,22 @@ It supports unread messages counter and native system notifications:
 Features
 --------
 
-* .NET Framework 4.6 Target for Zero Dependency
+* Microsoft .NET Framework 4.6 Target (all Windows' after 2015)
 * TWAIN 32/64-bit protocol version 2.5
+* Multiple Scan-Profiles per Data Source
+* Acquiring with Duplex and Autoscan enabled as multipage PDF
+* Delivery to Web Browser
 * Windows Tray Application
-* System Notification
-* Multiple Scan-Profile per data source
-* Empira C# PDF SDK
-* Kodak Alaris C# TWAIN SDK
-* INFOTECH F# WebSocket server
-* Xamarin C# MQTT client
+* System Notifications
 * <a href="https://crm.erp.uno">МІА: Документообіг</a> Companion Application
+
+Dependencies
+------------
+
+* Kodak Alaris C# TWAIN SDK (256KB)
+* Empira C# PDF SDK (700KB)
+* INFOTECH F# WebSocket server (64KB)
+* Xamarin C# MQTT client (160KB)
 
 Build
 -----
