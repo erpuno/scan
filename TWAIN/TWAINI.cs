@@ -55,6 +55,7 @@ namespace INFOTECH {
         [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         public void Dispose() { Dispose(true); GC.SuppressFinalize(this); }
 
+        // TWAIN: 7 -> 2: Rollback: Page 3-27 of 2017-03-TWAIN-SPEC-2.4
         public void Rollback(TWAIN.STATE a_state)
         {
             Console.WriteLine("Rollback to state: {0}", a_state);
@@ -71,6 +72,7 @@ namespace INFOTECH {
             if ((Twain.GetState() == TWAIN.STATE.S3) && (a_state < TWAIN.STATE.S3)) { Twain.DatParent(TWAIN.DG.CONTROL, TWAIN.MSG.CLOSEDSM, ref intptrHwnd); }
         }
 
+        // TWAIN: 4 -> 4: NativeTransfer: CONTROL/CAPABILITY/SET
         public void NativeTransfer()
         {
             TWAIN.STS sts;
@@ -82,6 +84,7 @@ namespace INFOTECH {
             if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
         }
 
+        // TWAIN: 4 -> 4: AutoFeed: CONTROL/CAPABILITY/SET
         public void AutoFeed()
         {
             TWAIN.STS sts;
@@ -93,6 +96,7 @@ namespace INFOTECH {
             if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
         }
 
+        // TWAIN: 4 -> 4: AutoScan: CONTROL/CAPABILITY/SET
         public void AutoScan()
         {
             TWAIN.STS sts;
@@ -104,6 +108,7 @@ namespace INFOTECH {
             if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
         }
 
+        // TWAIN: 4 -> 4: EnableDuplex: CONTROL/CAPABILITY/SET
         public void EnableDuplex()
         {
             TWAIN.STS sts;
@@ -115,6 +120,7 @@ namespace INFOTECH {
             if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
         }
 
+        // TWAIN: 4 -> 4: ProgressDriverUI: CONTROL/CAPABILITY/SET
         public void ProgressDriverUI(bool indicators)
         {
             this.Indicators = indicators;
@@ -127,6 +133,7 @@ namespace INFOTECH {
             if (sts != TWAIN.STS.SUCCESS) { Exit = true; }
         }
 
+        // TWAIN: 2 -> 3: OpenManager: CONTROL/PARENT/OPENDSM
         public TWAIN.STS OpenManager()
         {
             TWAIN.STS sts;
@@ -135,6 +142,8 @@ namespace INFOTECH {
             return sts;
 	}
 
+
+        // TWAIN: 2 -> 2: GetDefault: CONTROL/IDENTITY/GETDEFAULT
         public string GetDefault()
         {
             TWAIN.STS sts;
@@ -149,7 +158,7 @@ namespace INFOTECH {
             return szDefault;
         }
 
-
+        // TWAIN: 3 -> 3: GetDataSources: CONTROL/IDENTITY/GETFIRST,GETNEXT
         public List<string> GetDataSources()
         {
             TWAIN.STS sts;
@@ -167,6 +176,7 @@ namespace INFOTECH {
             return lszIdentity;
         }
 
+        // TWAIN: 3 -> 4: OpenScanner: CONTROL/IDENTITY/OPENDS
         public string OpenScanner(string szIdentity)
         {
             // Make it the default, we don't care if this succeeds...
@@ -191,6 +201,15 @@ namespace INFOTECH {
             { ProductDirectory = ProductDirectory.Replace(c, '_'); }
 
             return twidentity.ProductName.Get();
+        }
+
+        // TWAIN: 6 -> 6: StopFeeder: CONTROL/PENDINGXFERS/STOPFEEDER
+        public TWAIN.STS StopFeeder()
+        {
+            TWAIN.TW_PENDINGXFERS twpendingxfers = default(TWAIN.TW_PENDINGXFERS);
+            TWAIN.STS sts = Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.STOPFEEDER, ref twpendingxfers);
+            Console.WriteLine("STOP FEEDER: {0}", sts);
+            return sts;
         }
     }
 }

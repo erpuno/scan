@@ -677,7 +677,7 @@ namespace INFOTECH
             // twain.EnableDuplex();
             twain.NativeTransfer();
             twain.AutoFeed();
-            twain.ProgressDriverUI(true);
+            twain.ProgressDriverUI(false);
 
             this.Text = "МІА: Сканування (" + scannerName + ")";
             m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
@@ -695,9 +695,8 @@ namespace INFOTECH
 
         private void m_buttonStop_Click(object sender, EventArgs e)
         {
-            TWAIN.TW_PENDINGXFERS twpendingxfers = default(TWAIN.TW_PENDINGXFERS);
-            TWAIN.STS sts = twain.Twain.DatPendingxfers(TWAIN.DG.CONTROL, TWAIN.MSG.STOPFEEDER, ref twpendingxfers);
-            Console.WriteLine("STOP FEEDER: {0}", sts);
+            twain.PendingXfers = TWAIN.MSG.STOPFEEDER;
+//            twain.StopFeeder();
         }
 
         private enum EBUTTONSTATE
