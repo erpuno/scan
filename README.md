@@ -46,7 +46,7 @@ Connect from JavaScript console:
 ```
 > ws = new WebSocket("ws://127.0.0.1:50220")
 > ws.onmessage = function (evt) { console.log(evt.data); }
-> ws.send('PING')
+> ws.send('SCAN,DS-530,AUTOSCAN+AUTOFEED')
 ```
 
 Credits
