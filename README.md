@@ -46,12 +46,13 @@ Having Windows is the only prerequisite:
 > C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe mia-agent.csproj
 ```
 
-Scanning
+Scanners
 --------
 
-* EPSON DS-530
-* Kodak Alaris E1035
-* Kodak Alaris S2040
+* Epson DS-530
+* Canon DR-C240
+* Kodak E1035
+* Kodak S2040
 * <a href="https://sourceforge.net/projects/twain-samples/files/TWAIN%202%20Sample%20Data%20Source/TWAIN%20DS%202.1.3/">TWAIN Data Source FreeImage Virtual Scanner</a>
 
 Connect
