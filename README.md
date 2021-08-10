@@ -64,8 +64,8 @@ Connect from JavaScript console:
 > ws.send('SCAN,DS-530,AUTOSCAN+AUTOFEED')
 ```
 
-Recommended OS
---------------
+Systems
+-------
 
 * Windows 20H1
 * Windows 20H2
