@@ -49,6 +49,8 @@ Having Windows is the only prerequisite:
 Scanning
 --------
 
+If you don't have physical scanner, you can use virtual TWAIN data source:
+
 * <a href="https://sourceforge.net/projects/twain-samples/files/TWAIN%202%20Sample%20Data%20Source/TWAIN%20DS%202.1.3/">TWAIN Data Source FreeImage Virtual Scanner</a>
 
 Connect
