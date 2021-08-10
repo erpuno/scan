@@ -21,6 +21,12 @@ Features
 * System Notifications
 * <a href="https://crm.erp.uno">МІА: Документообіг</a> Companion Application
 
+Articles
+--------
+
+* [2021-01-04 F# WebSocket Server](https://tonpa.guru/stream/2021/2021-01-04%20F%23%20WebSocket%20Server.htm)
+* [2021-08-09 TWAIN 2](https://tonpa.guru/stream/2021/2021-08-09%20TWAIN%202.htm)
+
 Dependencies
 ------------
 
@@ -46,12 +52,13 @@ Connect from JavaScript console:
 ```
 > ws = new WebSocket("ws://127.0.0.1:50220")
 > ws.onmessage = function (evt) { console.log(evt.data); }
-> ws.send('PING')
+> ws.send('SCAN,DS-530,AUTOSCAN+AUTOFEED')
 ```
 
 Credits
 -------
 
+* Artem Sitalo
 * Andrii Zadorozhnii
 * Maksym Sokhatskyi
 * Siegmentation Fault
