@@ -46,6 +46,11 @@ Having Windows is the only prerequisite:
 > C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe mia-agent.csproj
 ```
 
+Scanning
+--------
+
+* <a href="https://sourceforge.net/projects/twain-samples/files/TWAIN%202%20Sample%20Data%20Source/TWAIN%20DS%202.1.3/">TWAIN Data Source FreeImage Virtual Scanner</a>
+
 Connect
 -------
 
