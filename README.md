@@ -58,6 +58,7 @@ Connect from JavaScript console:
 Credits
 -------
 
+* Artem Sitalo
 * Andrii Zadorozhnii
 * Maksym Sokhatskyi
 * Siegmentation Fault
