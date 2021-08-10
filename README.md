@@ -55,8 +55,8 @@ Scanners
 * Kodak S2040
 * <a href="https://sourceforge.net/projects/twain-samples/files/TWAIN%202%20Sample%20Data%20Source/TWAIN%20DS%202.1.3/">TWAIN Data Source FreeImage Virtual Scanner</a>
 
-Connect
--------
+API
+---
 
 Connect from JavaScript console:
 
