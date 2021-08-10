@@ -64,6 +64,13 @@ Connect from JavaScript console:
 > ws.send('SCAN,DS-530,AUTOSCAN+AUTOFEED')
 ```
 
+Recommended OS
+--------------
+
+* Windows 20H1
+* Windows 20H2
+* Ubuntu 20.10
+
 Credits
 -------
 
