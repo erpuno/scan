@@ -71,6 +71,7 @@ Systems
 
 * Windows 20H1
 * Windows 20H2
+* Windows 21H1
 * Ubuntu 20.10
 
 Credits
