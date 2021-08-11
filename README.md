@@ -12,7 +12,7 @@ It supports unread messages counter and native system notifications:
 Features
 --------
 
-* Microsoft .NET Framework 4.6.1 Target (all Windows' after 2015)
+* Microsoft .NET Framework 4.6.2 Target (30 March 2016)
 * TWAIN 32/64-bit protocol version 2.5
 * Multiple Scan-Profiles per Data Source
 * Acquiring with Duplex and Autoscan enabled as multipage PDF
