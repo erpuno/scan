@@ -46,8 +46,17 @@ Having Windows is the only prerequisite:
 > C:\Windows\Microsoft.NET\Framework\v4.0.30319\MSBuild.exe mia-agent.csproj
 ```
 
-Connect
--------
+Scanners
+--------
+
+* Epson DS-530
+* Canon DR-C240
+* Kodak E1035
+* Kodak S2040
+* <a href="https://sourceforge.net/projects/twain-samples/files/TWAIN%202%20Sample%20Data%20Source/TWAIN%20DS%202.1.3/">TWAIN Data Source FreeImage Virtual Scanner</a>
+
+API
+---
 
 Connect from JavaScript console:
 
@@ -56,6 +65,14 @@ Connect from JavaScript console:
 > ws.onmessage = function (evt) { console.log(evt.data); }
 > ws.send('SCAN,DS-530,AUTOSCAN+AUTOFEED')
 ```
+
+Systems
+-------
+
+* Windows 20H1
+* Windows 20H2
+* Windows 21H1
+* Ubuntu 20.10
 
 Credits
 -------
