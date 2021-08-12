@@ -13,7 +13,7 @@ Features
 --------
 
 The minimal OS supported is Windows 7 SP1. The minimal .NET Framework version embedded in each supported OS is 4.6.2.
-The default target platform is set to x86 for TWAIN32 as setting to x64 will reduce device support range.
+The default target platform is set to x86 for TWAIN32 as setting to x64 will reduce the range of supported devices.
 
 * Microsoft .NET Framework 4.6.2 Target (30 March 2016)
 * TWAIN 32/64-bit protocol version 2.5
