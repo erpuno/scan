@@ -82,6 +82,11 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>Resources\System.Net.Mqtt.dll</HintPath>
     </Reference>
+    <Reference Include="ILRepack.Lib.MSBuild.Task">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Resources\ILRepack.Lib.MSBuild.Task.dll</HintPath>
+    </Reference>
+
   </ItemGroup>
   <ItemGroup>
     <Compile Include="FormScan.cs"><SubType>Form</SubType></Compile>
@@ -123,11 +128,17 @@
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <!--UsingTask TaskName="ILRepack" AssemblyFile="Resources\ILRepack.Lib.MSBuild.Task.dll" />                        
+  <Target Name="ILRepacker" AfterTargets="Build" Condition="'$(Configuration)' == 'Debug'">
+     <ItemGroup>
+         <InputAssemblies Include="Resources\System.Net.Mqtt.dll" />
+         <InputAssemblies Include="Resources\PDFSharp.dll" />
+         <InputAssemblies Include="bin\x86\Debug\mia-agent.exe" />
+     </ItemGroup>
+
+     <ILRepack AllowDuplicateResources="true" DebugInfo="true" Internalize="false"
+        InputAssemblies="@(InputAssemblies)" OutputFile="$(TargetPath)" Parallel="true" TargetKind="SameAsPrimaryAssembly" />
+  </Target-->
+
+
 </Project>
