@@ -65,6 +65,26 @@ namespace INFOTECH
             notifyIcon.Visible = true;
         }
 
+        public void CreatePDF(int start, int stop)
+        {
+            Console.WriteLine("CreatePDF {0}-{1}", start, stop);
+            PdfDocument doc = new PdfDocument();
+            string aszFilename = "";
+
+            for (int i = start; i <= stop; i++)
+            {
+                aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", i)) + ".tif";
+
+                doc.Pages.Add(new PdfPage());
+                XGraphics xgr = XGraphics.FromPdfPage(doc.Pages[i-start]);
+                XImage img = XImage.FromFile(aszFilename);
+                xgr.DrawImage(img, 0, 0);
+	    }
+
+            doc.Save(Path.Combine(m_formsetup.GetImageFolder(), "doc-" + string.Format("{0:D6}", start) + "-" + string.Format("{0:D6}", stop)) + ".pdf");
+            doc.Close();
+        }
+
         private void Version(object sender, EventArgs e)
         {
             updateCounter();
@@ -72,20 +92,6 @@ namespace INFOTECH
                              "Повідомлення: Новий документ ЗА-23545",
                              "https://crm.erp.uno");
 
-            PdfDocument doc = new PdfDocument();
-
-            doc.Pages.Add(new PdfPage());
-            XGraphics xgr = XGraphics.FromPdfPage(doc.Pages[0]);
-            XImage img = XImage.FromFile(@"d:\BeOS\img000020.tif");
-            xgr.DrawImage(img, 0, 0);
-
-            doc.Pages.Add(new PdfPage());
-            xgr = XGraphics.FromPdfPage(doc.Pages[1]);
-            img = XImage.FromFile(@"d:\BeOS\img000030.tif");
-            xgr.DrawImage(img, 0, 0);
-
-            doc.Save(@"d:\BeOS\doc000030.pdf");
-            doc.Close();
 
             MessageBox.Show("Версія: 2.5.1.0\n\nРозробник: ДП «ІНФОТЕХ»", "МІА: Сканування");
         }
@@ -326,7 +332,7 @@ namespace INFOTECH
 
         private TWAIN.STS ScanCallbackNative(bool a_blClosing)
         {
-            Console.WriteLine("Scan Callback Entered: {0} Sate {1}", a_blClosing, twain.Twain.GetState());
+            Console.WriteLine("Scan Callback Entered: {0} Sate {1} Range {2}-{3}", a_blClosing, twain.Twain.GetState(), twain.AutoscanStartPage, twain.ImageCount);
 
             bool blXferDone = false;
             TWAIN.STS sts;
@@ -405,7 +411,7 @@ namespace INFOTECH
                 sts = twain.Twain.DatImagenativexfer(TWAIN.DG.IMAGE, TWAIN.MSG.GET, ref bitmap);
                 Console.WriteLine("ImageNativeXfer(): {0}", sts);
                 if (bitmap != null) Console.WriteLine("NATIVE GET: {0} {1} {2}", bitmap.Size, twain.ImageCount++, m_formsetup.GetImageFolder());
-                string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img" + string.Format("{0:D6}", twain.ImageCount)) + ".tif";
+                string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", twain.ImageCount)) + ".tif";
 
                 if (sts != TWAIN.STS.XFERDONE)
                 {
@@ -485,6 +491,8 @@ namespace INFOTECH
                 twain.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.DISABLEDS, ref twuserinterface);
                 SetButtons(EBUTTONSTATE.OPEN);
                 twain.ScanStart = true;
+                CreatePDF(twain.AutoscanStartPage+1, twain.ImageCount);
+                twain.AutoscanStartPage = twain.ImageCount;
             }
 
             Application.DoEvents();

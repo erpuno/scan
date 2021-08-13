@@ -25,6 +25,7 @@ namespace INFOTECH {
         public IntPtr intptrHwnd;
         public int UseBitmap = 0;
         public int ImageCount = 0;
+        public int AutoscanStartPage = 0;
         public bool DisableDsSent = false;
         public bool XferReadySent = false;
         public IntPtr ptrXfer = IntPtr.Zero;
