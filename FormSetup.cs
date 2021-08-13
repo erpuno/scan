@@ -299,6 +299,12 @@ namespace INFOTECH
             }
         }
 
+        private void m_buttonFormCaps_Click(object sender, EventArgs e)
+        {
+            FormCaps newForm = new FormCaps();
+            newForm.Show();
+        }
+
         private void m_textboxFolder_TextChanged(object sender, EventArgs e)
         {
             SaveFolder(m_textboxFolder.Text);
