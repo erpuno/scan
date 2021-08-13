@@ -16,6 +16,7 @@ namespace INFOTECH
             this.m_pictureboxImage2 = new System.Windows.Forms.PictureBox();
             this.m_buttonClose = new System.Windows.Forms.Button();
             this.m_buttonOpen = new System.Windows.Forms.Button();
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
             this.m_buttonStop = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.m_pictureboxImage1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.m_pictureboxImage2)).BeginInit();
