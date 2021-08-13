@@ -419,6 +419,15 @@ namespace INFOTECH
                     Console.WriteLine("File: {0}", aszFilename);
                     bitmap.Save(aszFilename, ImageFormat.Tiff);
 
+                if (twain.ImageCount % 2 == 0)
+                {
+                    LoadImage(ref m_pictureboxImage1, ref m_graphics1, ref m_bitmapGraphic1, bitmap);
+                }
+                else
+                {
+                    LoadImage(ref m_pictureboxImage2, ref m_graphics2, ref m_bitmapGraphic2, bitmap);
+                }
+
                     twainmsg = TWAIN.MSG.ENDXFER;
                     bitmap = null;
                     blXferDone = true;
