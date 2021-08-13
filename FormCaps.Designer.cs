@@ -29,6 +29,8 @@ namespace INFOTECH
             this.m_labelDuplex = new System.Windows.Forms.Label();
             this.m_checkboxDuplex = new System.Windows.Forms.CheckBox();
             this.m_labelWhiteZone = new System.Windows.Forms.Label();
+            this.m_numericWhiteZoneRight = new System.Windows.Forms.NumericUpDown();
+            this.m_numericWhiteZoneLeft = new System.Windows.Forms.NumericUpDown();
             this.m_groupboxManageSettings = new System.Windows.Forms.GroupBox();
             this.m_buttonCancel = new System.Windows.Forms.Button();
             this.m_buttonSave = new System.Windows.Forms.Button();
@@ -124,12 +126,26 @@ namespace INFOTECH
             this.m_labelWhiteZone.Size = new System.Drawing.Size(100, 15);
             this.m_labelWhiteZone.Text = "Біла зона";
             //
+            // m_numericWhiteZoneRight
+            //
+            this.m_numericWhiteZoneRight.Location = new System.Drawing.Point(150, 245);
+            this.m_numericWhiteZoneRight.Name = "m_numericWhiteZoneRight";
+            this.m_numericWhiteZoneRight.Size = new System.Drawing.Size(50, 15);
+            this.m_numericWhiteZoneRight.TabIndex = 5;
+            //
+            // m_numericWhiteZoneLeft
+            //
+            this.m_numericWhiteZoneLeft.Location = new System.Drawing.Point(210, 245);
+            this.m_numericWhiteZoneLeft.Name = "m_numericWhiteZoneLeft";
+            this.m_numericWhiteZoneLeft.Size = new System.Drawing.Size(50, 15);
+            this.m_numericWhiteZoneLeft.TabIndex = 6;
+            //
             // m_buttonCancel
             //
             this.m_buttonCancel.Location = new System.Drawing.Point(15, 300);
             this.m_buttonCancel.Name = "m_buttonShowDriverUi";
             this.m_buttonCancel.Size = new System.Drawing.Size(120, 20);
-            this.m_buttonCancel.TabIndex = 5;
+            this.m_buttonCancel.TabIndex = 7;
             this.m_buttonCancel.Text = "Скасувати";
             this.m_buttonCancel.UseVisualStyleBackColor = true;
             //
@@ -138,7 +154,7 @@ namespace INFOTECH
             this.m_buttonSave.Location = new System.Drawing.Point(150, 300);
             this.m_buttonSave.Name = "m_buttonShowDriverUi";
             this.m_buttonSave.Size = new System.Drawing.Size(120, 20);
-            this.m_buttonSave.TabIndex = 6;
+            this.m_buttonSave.TabIndex = 8;
             this.m_buttonSave.Text = "Зберегти";
             this.m_buttonSave.UseVisualStyleBackColor = true;
             //
@@ -154,6 +170,8 @@ namespace INFOTECH
             this.m_groupboxManageSettings.Controls.Add(this.m_checkboxAutofeed);
             this.m_groupboxManageSettings.Controls.Add(this.m_labelPages);
             this.m_groupboxManageSettings.Controls.Add(this.m_numericPages);
+            this.m_groupboxManageSettings.Controls.Add(this.m_numericWhiteZoneRight);
+            this.m_groupboxManageSettings.Controls.Add(this.m_numericWhiteZoneLeft);
             this.m_groupboxManageSettings.Controls.Add(this.m_labelDuplex);
             this.m_groupboxManageSettings.Controls.Add(this.m_checkboxDuplex);
             this.m_groupboxManageSettings.Controls.Add(this.m_labelWhiteZone);
@@ -189,6 +207,8 @@ namespace INFOTECH
         private System.Windows.Forms.CheckBox m_checkboxAutofeed;
         private System.Windows.Forms.Label m_labelPages;
         private System.Windows.Forms.NumericUpDown m_numericPages;
+        private System.Windows.Forms.NumericUpDown m_numericWhiteZoneRight;
+        private System.Windows.Forms.NumericUpDown m_numericWhiteZoneLeft;
         private System.Windows.Forms.Label m_labelDuplex;
         private System.Windows.Forms.CheckBox m_checkboxDuplex;
         private System.Windows.Forms.Label m_labelWhiteZone;
