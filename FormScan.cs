@@ -120,6 +120,7 @@ namespace INFOTECH
             this.Icon = Properties.Resources.Default;
             this.SystemTrayIcon.Icon = Properties.Resources.Default;
             this.notifyIcon = new System.Windows.Forms.NotifyIcon(this.components);
+            this.FormBorderStyle = FormBorderStyle.FixedSingle;
 
             // Change the Text property to the name of your application
             this.SystemTrayIcon.Text = "МІА: Сканування Документів";
