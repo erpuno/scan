@@ -72,10 +72,9 @@ Connect from JavaScript console:
 Systems
 -------
 
-* Windows 20H1
-* Windows 20H2
-* Windows 21H1
-* Ubuntu 20.10
+* Microsoft Windows 10 (20H1,20H2,21H1), Windows 11 (21H2)
+* Ubuntu Linux 20.10
+* Apple macOS 11.5
 
 Credits
 -------
