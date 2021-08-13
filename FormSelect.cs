@@ -20,6 +20,7 @@ namespace INFOTECH
                 aszIdentity = CSV.Parse(sz);
                 m_listboxSelect.Items.Add(aszIdentity[11].ToString());
             }
+            if (aszDefault.Length > 10)
             m_listboxSelect.SelectedIndex = m_listboxSelect.FindStringExact(aszDefault[11]);
             m_listboxSelect.EndUpdate();
         }
