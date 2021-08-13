@@ -86,6 +86,8 @@
   <ItemGroup>
     <Compile Include="FormScan.cs"><SubType>Form</SubType></Compile>
     <Compile Include="FormScan.Designer.cs"><DependentUpon>FormScan.cs</DependentUpon></Compile>
+    <Compile Include="FormCaps.cs"><SubType>Form</SubType></Compile>
+    <Compile Include="FormCaps.Designer.cs"><DependentUpon>FormCaps.cs</DependentUpon></Compile>
     <Compile Include="FormSetup.cs"><SubType>Form</SubType></Compile>
     <Compile Include="FormSetup.Designer.cs"><DependentUpon>FormSetup.cs</DependentUpon></Compile>
     <Compile Include="FormSelect.cs"><SubType>Form</SubType></Compile>
@@ -98,6 +100,7 @@
     <EmbeddedResource Include="FormScan.resx"><DependentUpon>FormScan.cs</DependentUpon></EmbeddedResource>
     <EmbeddedResource Include="FormSelect.resx"><DependentUpon>FormSelect.cs</DependentUpon></EmbeddedResource>
     <EmbeddedResource Include="FormSetup.resx"><DependentUpon>FormSetup.cs</DependentUpon></EmbeddedResource>
+    <EmbeddedResource Include="FormCaps.resx"><DependentUpon>FormCaps.cs</DependentUpon></EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
