@@ -151,7 +151,6 @@ namespace INFOTECH
                 twain.scanCallback = ScanCallbackTrigger;
                 twain.runInUIThreadDelegate = RunInUiThread;
                 twain.Init(this.Handle);
-
                 Console.WriteLine("Initialized {0}", twain);
             }
             catch (Exception exception)
@@ -545,6 +544,7 @@ namespace INFOTECH
 
         private void m_buttonSetup_Click(object sender, EventArgs e)
         {
+            m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
             m_formsetup.StartPosition = FormStartPosition.CenterParent;
             m_formsetup.ShowDialog(this);
         }
@@ -675,7 +675,7 @@ namespace INFOTECH
             TWAIN.STS sts;
 
             sts = twain.OpenManager();
-            if (sts != TWAIN.STS.SUCCESS) { MessageBox.Show("Неможливо відкрити шину джерел даних"); return; }
+            if (sts != TWAIN.STS.SUCCESS) { MessageBox.Show("Неможливо відкрити джерело даних"); return; }
             szDefault = twain.GetDefault();
             lszIdentity = twain.GetDataSources();
             if (lszIdentity.Count == 0) { MessageBox.Show("На цій ситемі відсутні TWAIN драйвери..."); return; }
@@ -698,7 +698,6 @@ namespace INFOTECH
             twain.ProgressDriverUI(false);
 
             this.Text = "МІА: Сканування (" + scannerName + ")";
-            m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
             SetButtons(EBUTTONSTATE.OPEN);
         }
 
@@ -706,6 +705,7 @@ namespace INFOTECH
         {
             twain.Rollback(TWAIN.STATE.S2);
             SetButtons(EBUTTONSTATE.CLOSED);
+            twain.ProductDirectory = "";
             m_formsetup.Dispose();
             m_formsetup = null;
             Console.WriteLine("Close Click");
@@ -724,7 +724,8 @@ namespace INFOTECH
             SCANNING
         }
 
-        private FormSetup m_formsetup;
+        public FormSetup m_formsetup;
+        public FormCaps m_formcaps;
 
         private Bitmap m_bitmapGraphic1;
         private Bitmap m_bitmapGraphic2;

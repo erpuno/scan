@@ -16,6 +16,7 @@ namespace INFOTECH
             string szStatus;
             string szCapability = "";
             string szUsrUiSettings;
+            m_szProductDirectory = a_szProductDirectory;
 
             InitializeComponent();
             Console.WriteLine("FormSetup constructor");
@@ -105,6 +106,7 @@ namespace INFOTECH
                 MessageBox.Show("Please enter a valid UI Setting name, or clear the entry.");
                 e.Cancel = true;
             }
+            m_szProductDirectory = "";
         }
 
         private string RestoreFolder()
@@ -301,8 +303,8 @@ namespace INFOTECH
 
         private void m_buttonFormCaps_Click(object sender, EventArgs e)
         {
-            FormCaps newForm = new FormCaps();
-            newForm.Show();
+            m_formscan.m_formcaps = new FormCaps(m_formscan);
+            m_formscan.m_formcaps.Show();
         }
 
         private void m_textboxFolder_TextChanged(object sender, EventArgs e)
@@ -310,8 +312,9 @@ namespace INFOTECH
             SaveFolder(m_textboxFolder.Text);
         }
 
-        private string m_szTwainscanFolder;
-        private string m_szSettingsFolder;
+        public string m_szTwainscanFolder;
+        public string m_szSettingsFolder;
+        public string m_szProductDirectory;
         private TWAIN m_twain;
         private FormScan m_formscan;
 

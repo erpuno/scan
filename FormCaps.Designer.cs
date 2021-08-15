@@ -42,35 +42,39 @@ namespace INFOTECH
             this.m_labelDPI.Location = new System.Drawing.Point(15, 35);
             this.m_labelDPI.Name = "m_labelDPI";
             this.m_labelDPI.Size = new System.Drawing.Size(100, 15);
-            this.m_labelDPI.Text = "DPI";
-            // 
+            this.m_labelDPI.Text = "Точок на дюйм";
+
             // m_comboDPI
             //
             this.m_comboDPI.Location = new System.Drawing.Point(150, 30);
             this.m_comboDPI.Name = "m_comboDPI";
             this.m_comboDPI.Size = new System.Drawing.Size(200, 15);
             this.m_comboDPI.TabIndex = 1;
+            this.m_comboDPI.Items.AddRange(new object[] {"200", "300", "400", "600", "800", "1200"});
+            this.m_comboDPI.Text = (string)this.m_comboDPI.Items[0];
             //
             // m_labelColor
             //
             this.m_labelColor.Location = new System.Drawing.Point(15, 70);
             this.m_labelColor.Name = "m_labelColor";
             this.m_labelColor.Size = new System.Drawing.Size(100, 15);
-            this.m_labelColor.Text = "Колір";
-            //
+            this.m_labelColor.Text = "Бітність кольору";
+//
             // m_comboColor
             //
             this.m_comboColor.Location = new System.Drawing.Point(150, 65);
             this.m_comboColor.Name = "m_comboColor";
             this.m_comboColor.Size = new System.Drawing.Size(200, 15);
             this.m_comboColor.TabIndex = 2;
+            this.m_comboColor.Items.AddRange(new object[] {"Чорно-білий (2-біт)", "Градієнт сірого (8-біт)", "Повнокольоровий (24-біт)"});
+            this.m_comboColor.Text = (string)this.m_comboColor.Items[0];
             //
             // m_labelFormat
             //
             this.m_labelFormat.Location = new System.Drawing.Point(15, 105);
             this.m_labelFormat.Name = "m_labelFormat";
             this.m_labelFormat.Size = new System.Drawing.Size(100, 15);
-            this.m_labelFormat.Text = "Формат";
+            this.m_labelFormat.Text = "Формат паперу";
             //
             // m_comboFormat
             //
@@ -78,6 +82,8 @@ namespace INFOTECH
             this.m_comboFormat.Name = "m_comboFormat";
             this.m_comboFormat.Size = new System.Drawing.Size(200, 15);
             this.m_comboFormat.TabIndex = 3;
+            this.m_comboFormat.Items.AddRange(new object[] {"A4", "A5", "ID-Картка"});
+            this.m_comboFormat.Text = (string)this.m_comboFormat.Items[0];
             //
             // m_labelAutofeed
             //
@@ -179,7 +185,7 @@ namespace INFOTECH
             this.m_groupboxManageSettings.Controls.Add(this.m_buttonSave);
             this.m_groupboxManageSettings.Location = new System.Drawing.Point(15, 15);
             this.m_groupboxManageSettings.Name = "m_groupboxManageSettings";
-            this.m_groupboxManageSettings.Size = new System.Drawing.Size(370, 350);
+            this.m_groupboxManageSettings.Size = new System.Drawing.Size(570, 350);
             this.m_groupboxManageSettings.TabStop = false;
             this.m_groupboxManageSettings.Text = "Параметри сканування";
             // 
@@ -187,10 +193,10 @@ namespace INFOTECH
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(400, 380);
+            this.ClientSize = new System.Drawing.Size(600, 380);
             this.Controls.Add(this.m_groupboxManageSettings);
-            this.Name = "MIA-SETUP";
-            this.Text = "Налаштування МІА: Сканування";
+            this.Name = "MIA-CAPS";
+            this.Text = "Налаштування сканеру " + m_formscan.m_formsetup.m_szProductDirectory;
             this.Icon = Properties.Resources.Default;
             this.m_groupboxManageSettings.ResumeLayout(false);
             this.ResumeLayout(false);

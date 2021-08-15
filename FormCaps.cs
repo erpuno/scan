@@ -12,8 +12,11 @@ namespace INFOTECH
 {
     public partial class FormCaps : Form
     {
-        public FormCaps()
+        public FormScan m_formscan;
+
+        public FormCaps(FormScan parent)
         {
+            m_formscan = parent;
             InitializeComponent();
         }
     }
