@@ -82,4 +82,5 @@ Credits
 * Artem Sitalo
 * Andrii Zadorozhnii
 * Maksym Sokhatskyi
+* Denys Shkurko
 * Siegmentation Fault
