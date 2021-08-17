@@ -151,7 +151,7 @@ namespace INFOTECH
                 twain.scanCallback = ScanCallbackTrigger;
                 twain.runInUIThreadDelegate = RunInUiThread;
                 twain.Init(this.Handle);
-                Console.WriteLine("Initialized {0}", twain);
+                Console.WriteLine("Initialized {0} {1}", twain, this.Handle);
             }
             catch (Exception exception)
             {
@@ -549,11 +549,18 @@ namespace INFOTECH
             m_formsetup.ShowDialog(this);
         }
 
+        public void EnsureFormSetup() 
+        {
+            if (m_formsetup == null)
+               m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
+        }
+
         public void m_buttonScan_Click(object sender, EventArgs e)
         {
             twain.UseBitmap = 0;
             string szTwmemref;
             TWAIN.STS sts;
+            EnsureFormSetup();
 
             if (m_formsetup.IsCustomDsDataSupported()) { szTwmemref = "FALSE,FALSE," + this.Handle; }
             else { szTwmemref = "TRUE,FALSE," + this.Handle; }
