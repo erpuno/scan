@@ -35,19 +35,19 @@ namespace INFOTECH
 {
     public partial class FormScan : Form, IMessageFilter
     {
-        TWAINI twain = new TWAINI();
+        public TWAINI twain = new TWAINI();
 
-        private int counter = 77;
-        private System.Windows.Forms.NotifyIcon notifyIcon;
+        public int counter = 77;
+        public System.Windows.Forms.NotifyIcon notifyIcon;
 
-        private void SystemTrayIconDoubleClick(object sender, MouseEventArgs e)
+        public void SystemTrayIconDoubleClick(object sender, MouseEventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
             this.Show();
             this.WindowState = FormWindowState.Normal;
         }
 
-        private void ContextMenuExit(object sender, EventArgs e)
+        public void ContextMenuExit(object sender, EventArgs e)
         {
             this.SystemTrayIcon.Visible = false;
             Application.Exit();
@@ -85,7 +85,7 @@ namespace INFOTECH
             doc.Close();
         }
 
-        private void Version(object sender, EventArgs e)
+        public void Version(object sender, EventArgs e)
         {
             updateCounter();
             ShowNotification("Джерело: МІА:Документообіг",
@@ -98,7 +98,7 @@ namespace INFOTECH
 
         public void OpenUrl(string URL) { System.Diagnostics.Process.Start("https://crm.erp.uno"); }
 
-        private void WindowResize(object sender, EventArgs e)
+        public void WindowResize(object sender, EventArgs e)
         {
             if (this.WindowState == FormWindowState.Minimized)
             {
@@ -106,7 +106,7 @@ namespace INFOTECH
             }
         }
 
-        private void WindowClosing(object sender, FormClosingEventArgs e)
+        public void WindowClosing(object sender, FormClosingEventArgs e)
         {
             e.Cancel = true;
             this.Hide();
@@ -189,7 +189,7 @@ namespace INFOTECH
 
         public delegate void ScanCallbackEvent();
 
-        private void ScanCallbackEventHandler(object sender, EventArgs e)
+        public void ScanCallbackEventHandler(object sender, EventArgs e)
         {
             ScanCallbackNative((twain.Twain == null) ? true : (twain.Twain.GetState() <= TWAIN.STATE.S3));
         }
@@ -303,7 +303,7 @@ namespace INFOTECH
             // All done...
             return (TWAIN.STS.SUCCESS);
         }
-        private TWAIN.STS DeviceEventCallback()
+        public TWAIN.STS DeviceEventCallback()
         {
             TWAIN.STS sts;
             TWAIN.TW_DEVICEEVENT twdeviceevent;
@@ -324,13 +324,13 @@ namespace INFOTECH
             return (TWAIN.STS.SUCCESS);
         }
 
-        private TWAIN.STS ScanCallbackTrigger(bool a_blClosing)
+        public TWAIN.STS ScanCallbackTrigger(bool a_blClosing)
         {
             BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
             return (TWAIN.STS.SUCCESS);
         }
 
-        private TWAIN.STS ScanCallbackNative(bool a_blClosing)
+        public TWAIN.STS ScanCallbackNative(bool a_blClosing)
         {
             Console.WriteLine("Scan Callback Entered: {0} Sate {1} Range {2}-{3}", a_blClosing, twain.Twain.GetState(), twain.AutoscanStartPage, twain.ImageCount);
 
@@ -542,14 +542,14 @@ namespace INFOTECH
             return (twain.Exit);
         }
 
-        private void m_buttonSetup_Click(object sender, EventArgs e)
+        public void m_buttonSetup_Click(object sender, EventArgs e)
         {
             m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
             m_formsetup.StartPosition = FormStartPosition.CenterParent;
             m_formsetup.ShowDialog(this);
         }
 
-        private void m_buttonScan_Click(object sender, EventArgs e)
+        public void m_buttonScan_Click(object sender, EventArgs e)
         {
             twain.UseBitmap = 0;
             string szTwmemref;
@@ -576,7 +576,7 @@ namespace INFOTECH
             twain.DisableDsSent = false;
         }
 
-        private void LoadImage(ref PictureBox a_picturebox, ref Graphics a_graphics, ref Bitmap a_bitmapGraphic, Bitmap a_bitmap)
+        public void LoadImage(ref PictureBox a_picturebox, ref Graphics a_graphics, ref Bitmap a_bitmapGraphic, Bitmap a_bitmap)
         {
             // We want to maintain the aspect ratio...
             double fRatioWidth = (double)a_bitmapGraphic.Size.Width / (double)a_bitmap.Width;
@@ -592,7 +592,7 @@ namespace INFOTECH
             a_picturebox.Update();
         }
 
-        private void InitImage()
+        public void InitImage()
         {
             // Make sure our picture boxes don't do much work...
             m_pictureboxImage1.SizeMode = PictureBoxSizeMode.Normal;
@@ -618,7 +618,7 @@ namespace INFOTECH
             m_rectangleBackground = new Rectangle(0, 0, m_bitmapGraphic1.Width, m_bitmapGraphic1.Height);
         }
 
-        private void RunInUiThread(Action a_action)
+        public void RunInUiThread(Action a_action)
         {
             RunInUiThread(this, a_action);
         }
@@ -634,7 +634,7 @@ namespace INFOTECH
             a_action();
         }
 
-        private void SetButtons(EBUTTONSTATE a_ebuttonstate)
+        public void SetButtons(EBUTTONSTATE a_ebuttonstate)
         {
             switch (a_ebuttonstate)
             {
@@ -665,7 +665,7 @@ namespace INFOTECH
             }
         }
 
-        private void m_buttonOpen_Click(object sender, EventArgs e)
+        public void m_buttonOpen_Click(object sender, EventArgs e)
         {
             string szIdentity;
             string szDefault = "";
@@ -701,7 +701,7 @@ namespace INFOTECH
             SetButtons(EBUTTONSTATE.OPEN);
         }
 
-        private void m_buttonClose_Click(object sender, EventArgs e)
+        public void m_buttonClose_Click(object sender, EventArgs e)
         {
             twain.Rollback(TWAIN.STATE.S2);
             SetButtons(EBUTTONSTATE.CLOSED);
@@ -711,13 +711,13 @@ namespace INFOTECH
             Console.WriteLine("Close Click");
         }
 
-        private void m_buttonStop_Click(object sender, EventArgs e)
+        public void m_buttonStop_Click(object sender, EventArgs e)
         {
             twain.PendingXfers = TWAIN.MSG.STOPFEEDER;
 //            twain.StopFeeder();
         }
 
-        private enum EBUTTONSTATE
+        public enum EBUTTONSTATE
         {
             CLOSED,
             OPEN,
@@ -727,12 +727,12 @@ namespace INFOTECH
         public FormSetup m_formsetup;
         public FormCaps m_formcaps;
 
-        private Bitmap m_bitmapGraphic1;
-        private Bitmap m_bitmapGraphic2;
-        private Graphics m_graphics1;
-        private Graphics m_graphics2;
-        private Brush m_brushBackground;
-        private Rectangle m_rectangleBackground;
+        public Bitmap m_bitmapGraphic1;
+        public Bitmap m_bitmapGraphic2;
+        public Graphics m_graphics1;
+        public Graphics m_graphics2;
+        public Brush m_brushBackground;
+        public Rectangle m_rectangleBackground;
 
         public delegate void RunInUiThreadDelegate(Object a_object, Action a_action);
 
