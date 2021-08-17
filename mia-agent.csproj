@@ -12,7 +12,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>INFOTECH</RootNamespace>
     <AssemblyName>mia-agent</AssemblyName>
-    <!--TargetFrameworkVersion>v4.8</TargetFrameworkVersion-->
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <TargetFramework>net462</TargetFramework>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <EnableDefaultEmbeddedResourceItems>false</EnableDefaultEmbeddedResourceItems>
