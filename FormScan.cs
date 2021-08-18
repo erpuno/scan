@@ -730,7 +730,7 @@ namespace INFOTECH
             Console.WriteLine("STOP PRESSED");
             twain.Exit = true;
             twain.PendingXfers = TWAIN.MSG.STOPFEEDER;
-//            twain.StopFeeder();
+//            twain.StopFeeder(); // is not supported on Virtual Scanner, we need to check CAPs before calling StopFeeder
         }
 
         public enum EBUTTONSTATE
