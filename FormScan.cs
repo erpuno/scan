@@ -65,10 +65,23 @@ namespace INFOTECH
             notifyIcon.Visible = true;
         }
 
+        PdfDocument doc = new PdfDocument();
+ 
+        public void ProcessPDF(int start, int page)
+        {
+            Console.WriteLine("ProcessPDF {0}-{1}", start, page);
+            string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", page)) + ".tif";
+            doc.Pages.Add(new PdfPage());
+            XGraphics xgr = XGraphics.FromPdfPage(doc.Pages[page-start]);
+            XImage img = XImage.FromFile(aszFilename);
+            xgr.DrawImage(img, 0, 0);
+
+        }
+      
         public void CreatePDF(int start, int stop)
         {
             Console.WriteLine("CreatePDF {0}-{1}", start, stop);
-            PdfDocument doc = new PdfDocument();
+/*            PdfDocument doc = new PdfDocument();
             string aszFilename = "";
 
             for (int i = start; i <= stop; i++)
@@ -77,12 +90,14 @@ namespace INFOTECH
 
                 doc.Pages.Add(new PdfPage());
                 XGraphics xgr = XGraphics.FromPdfPage(doc.Pages[i-start]);
-                XImage img = XImage.FromFile(aszFilename);
+                //XImage img = XImage.FromFile(aszFilename);
+                XImage img = XImage.FromGdiPlusImage(bitmap)
                 xgr.DrawImage(img, 0, 0);
 	    }
-
+*/
             doc.Save(Path.Combine(m_formsetup.GetImageFolder(), "doc-" + string.Format("{0:D6}", start) + "-" + string.Format("{0:D6}", stop)) + ".pdf");
             doc.Close();
+            doc = new PdfDocument();
         }
 
         public void Version(object sender, EventArgs e)
@@ -421,7 +436,7 @@ namespace INFOTECH
 
             if (twain.XferMech == TWAIN.TWSX.NATIVE)
             {
-                Bitmap bitmap = null;
+                bitmap = null;
                 sts = twain.Twain.DatImagenativexfer(TWAIN.DG.IMAGE, TWAIN.MSG.GET, ref bitmap);
                 Console.WriteLine("ImageNativeXfer(): {0}", sts);
                 if (bitmap != null) Console.WriteLine("NATIVE GET: {0} {1} {2}", bitmap.Size, twain.ImageCount++, m_formsetup.GetImageFolder());
@@ -437,7 +452,7 @@ namespace INFOTECH
                 {
                     if (File.Exists(aszFilename)) File.Delete(aszFilename);
                     Console.WriteLine("File: {0}", aszFilename);
-                    bitmap.Save(aszFilename, ImageFormat.Tiff);
+                    bitmap.Save(aszFilename, ImageFormat.Bmp);
 
                     if (twain.ImageCount % 2 == 0) LoadImage(ref m_pictureboxImage1, ref m_graphics1, ref m_bitmapGraphic1, bitmap);
                     else LoadImage(ref m_pictureboxImage2, ref m_graphics2, ref m_bitmapGraphic2, bitmap);
@@ -485,6 +500,8 @@ namespace INFOTECH
                 twain.Twain.Rollback(twain.AfterScan);
                 return (TWAIN.STS.SUCCESS);
             }
+
+            ProcessPDF(twain.AutoscanStartPage+1, twain.ImageCount);
 
             // End page XFER 0 0
             if (twpendingxfersEndXfer.Count == 0)
@@ -740,6 +757,7 @@ namespace INFOTECH
             SCANNING
         }
 
+        public Bitmap bitmap;
         public FormSetup m_formsetup;
         public FormCaps m_formcaps;
 
