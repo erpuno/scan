@@ -15275,25 +15275,6 @@ namespace TWAIN32
 
             // Backup old stuff...
             szLogFile = Path.Combine(a_szPath, a_szName);
-            try
-            {
-                if (File.Exists(szLogFile + "_backup_2.log"))
-                {
-                    File.Delete(szLogFile + "_backup_2.log");
-                }
-                if (File.Exists(szLogFile + "_backup_1.log"))
-                {
-                    File.Move(szLogFile + "_backup_1.log", szLogFile + "_backup_2.log");
-                }
-                if (File.Exists(szLogFile + ".log"))
-                {
-                    File.Move(szLogFile + ".log", szLogFile + "_backup_1.log");
-                }
-            }
-            catch
-            {
-                // Don't care, keep going...
-            }
 
             // Turn on the listener...
             ms_filestream = File.Open(szLogFile + ".log", FileMode.Append, FileAccess.Write, FileShare.Read);
