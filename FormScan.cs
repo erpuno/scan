@@ -67,7 +67,7 @@ namespace INFOTECH
 
         PdfDocument doc = new PdfDocument();
  
-        public void ProcessPDF(int start, int page)
+        public void ProcessPDFPage(int start, int page)
         {
             Console.WriteLine("ProcessPDF {0}-{1}", start, page);
             string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", page)) + ".tif";
@@ -78,23 +78,9 @@ namespace INFOTECH
 
         }
       
-        public void CreatePDF(int start, int stop)
+        public void FinalizePDF(int start, int stop)
         {
             Console.WriteLine("CreatePDF {0}-{1}", start, stop);
-/*            PdfDocument doc = new PdfDocument();
-            string aszFilename = "";
-
-            for (int i = start; i <= stop; i++)
-            {
-                aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", i)) + ".tif";
-
-                doc.Pages.Add(new PdfPage());
-                XGraphics xgr = XGraphics.FromPdfPage(doc.Pages[i-start]);
-                //XImage img = XImage.FromFile(aszFilename);
-                XImage img = XImage.FromGdiPlusImage(bitmap)
-                xgr.DrawImage(img, 0, 0);
-	    }
-*/
             doc.Save(Path.Combine(m_formsetup.GetImageFolder(), "doc-" + string.Format("{0:D6}", start) + "-" + string.Format("{0:D6}", stop)) + ".pdf");
             doc.Close();
             doc = new PdfDocument();
@@ -501,7 +487,7 @@ namespace INFOTECH
                 return (TWAIN.STS.SUCCESS);
             }
 
-            ProcessPDF(twain.AutoscanStartPage+1, twain.ImageCount);
+            ProcessPDFPage(twain.AutoscanStartPage+1, twain.ImageCount);
 
             // End page XFER 0 0
             if (twpendingxfersEndXfer.Count == 0)
@@ -513,7 +499,7 @@ namespace INFOTECH
                 twain.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.DISABLEDS, ref twuserinterface);
                 SetButtons(EBUTTONSTATE.OPEN);
                 twain.ScanStart = true;
-                CreatePDF(twain.AutoscanStartPage+1, twain.ImageCount);
+                FinalizePDF(twain.AutoscanStartPage+1, twain.ImageCount);
                 twain.AutoscanStartPage = twain.ImageCount;
             }
 
