@@ -332,7 +332,7 @@ namespace INFOTECH
 
         public TWAIN.STS ScanCallbackNative(bool a_blClosing)
         {
-            Console.WriteLine("Scan Callback Entered: {0} Sate {1} Range {2}-{3}", a_blClosing, twain.Twain.GetState(), twain.AutoscanStartPage, twain.ImageCount);
+            Console.WriteLine("Scan Callback Entered: {0} Sate {1} Range {2}-{3}", twain.Exit, twain.Twain.GetState(), twain.AutoscanStartPage, twain.ImageCount);
 
             bool blXferDone = false;
             TWAIN.STS sts;
@@ -343,14 +343,28 @@ namespace INFOTECH
             if (a_blClosing) { return (TWAIN.STS.SUCCESS); }
 
             Console.WriteLine("Scan Callback IsMsgCloseDsReq {0}", twain.Twain.IsMsgCloseDsReq());
-            if (twain.Twain.IsMsgCloseDsReq() && !twain.DisableDsSent)
+            if ((twain.Twain.IsMsgCloseDsReq() && !twain.DisableDsSent) || twain.Exit)
             {
                 Console.WriteLine("IsMsgCloseDsReq {0}", !twain.DisableDsSent);
                 twain.DisableDsSent = true;
                 twain.Rollback(TWAIN.STATE.S4);
                 SetButtons(EBUTTONSTATE.OPEN);
             }
-
+/*
+            if (this.InvokeRequired)
+            {
+                return
+                (
+                    (TWAIN.STS)Invoke
+                    (
+                        (Func<TWAIN.STS>)delegate
+                        {
+                            return (ScanCallbackNative(a_blClosing));
+                        }
+                    )
+                );
+            }
+ */
             Console.WriteLine("Scan Callback IsMsgCloseDsOk {0}", twain.Twain.IsMsgCloseDsOk());
             if (twain.Twain.IsMsgCloseDsOk() && !twain.DisableDsSent)
             {
@@ -425,21 +439,12 @@ namespace INFOTECH
                     Console.WriteLine("File: {0}", aszFilename);
                     bitmap.Save(aszFilename, ImageFormat.Tiff);
 
-                if (twain.ImageCount % 2 == 0)
-                {
-                    LoadImage(ref m_pictureboxImage1, ref m_graphics1, ref m_bitmapGraphic1, bitmap);
-                }
-                else
-                {
-                    LoadImage(ref m_pictureboxImage2, ref m_graphics2, ref m_bitmapGraphic2, bitmap);
-                }
+                    if (twain.ImageCount % 2 == 0) LoadImage(ref m_pictureboxImage1, ref m_graphics1, ref m_bitmapGraphic1, bitmap);
+                    else LoadImage(ref m_pictureboxImage2, ref m_graphics2, ref m_bitmapGraphic2, bitmap);
 
                     twainmsg = TWAIN.MSG.ENDXFER;
                     bitmap = null;
                     blXferDone = true;
-                    twain.DisableDsSent = true;
-                    twain.Exit = true;
-                    twain.ScanStart = true;
 
                     if (twainmsg == TWAIN.MSG.STOPFEEDER) { twain.PendingXfers = TWAIN.MSG.STOPFEEDER; }
                     else if (twainmsg == TWAIN.MSG.RESET) { twain.PendingXfers = TWAIN.MSG.RESET; }
@@ -561,6 +566,8 @@ namespace INFOTECH
             string szTwmemref;
             TWAIN.STS sts;
             EnsureFormSetup();
+            twain.Exit = false;
+            twain.ScanStart = true;
 
             if (m_formsetup.IsCustomDsDataSupported()) { szTwmemref = "FALSE,FALSE," + this.Handle; }
             else { szTwmemref = "TRUE,FALSE," + this.Handle; }
@@ -720,6 +727,8 @@ namespace INFOTECH
 
         public void m_buttonStop_Click(object sender, EventArgs e)
         {
+            Console.WriteLine("STOP PRESSED");
+            twain.Exit = true;
             twain.PendingXfers = TWAIN.MSG.STOPFEEDER;
 //            twain.StopFeeder();
         }

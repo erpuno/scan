@@ -46,7 +46,7 @@ namespace INFOTECH
             this.m_buttonScan.Location = new System.Drawing.Point(533, 453);
             this.m_buttonScan.Name = "m_buttonScan";
             this.m_buttonScan.Size = new System.Drawing.Size(75, 23);
-            this.m_buttonScan.TabIndex = 1;
+            this.m_buttonScan.TabIndex = 4;
             this.m_buttonScan.Text = "Сканувати";
             this.m_buttonScan.UseVisualStyleBackColor = true;
             this.m_buttonScan.Click += new System.EventHandler(this.m_buttonScan_Click);
@@ -75,7 +75,7 @@ namespace INFOTECH
             this.m_buttonClose.Location = new System.Drawing.Point(94, 453);
             this.m_buttonClose.Name = "m_buttonClose";
             this.m_buttonClose.Size = new System.Drawing.Size(75, 23);
-            this.m_buttonClose.TabIndex = 5;
+            this.m_buttonClose.TabIndex = 2;
             this.m_buttonClose.Text = "Закрити";
             this.m_buttonClose.UseVisualStyleBackColor = true;
             this.m_buttonClose.Click += new System.EventHandler(this.m_buttonClose_Click);
@@ -85,7 +85,7 @@ namespace INFOTECH
             this.m_buttonOpen.Location = new System.Drawing.Point(13, 453);
             this.m_buttonOpen.Name = "m_buttonOpen";
             this.m_buttonOpen.Size = new System.Drawing.Size(75, 23);
-            this.m_buttonOpen.TabIndex = 6;
+            this.m_buttonOpen.TabIndex = 1;
             this.m_buttonOpen.Text = "Відкрити...";
             this.m_buttonOpen.UseVisualStyleBackColor = true;
             this.m_buttonOpen.Click += new System.EventHandler(this.m_buttonOpen_Click);
@@ -95,7 +95,7 @@ namespace INFOTECH
             this.m_buttonStop.Location = new System.Drawing.Point(614, 453);
             this.m_buttonStop.Name = "m_buttonStop";
             this.m_buttonStop.Size = new System.Drawing.Size(75, 23);
-            this.m_buttonStop.TabIndex = 7;
+            this.m_buttonStop.TabIndex = 5;
             this.m_buttonStop.Text = "Зупинити";
             this.m_buttonStop.UseVisualStyleBackColor = true;
             this.m_buttonStop.Click += new System.EventHandler(this.m_buttonStop_Click);
@@ -119,12 +119,12 @@ namespace INFOTECH
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(702, 488);
-            this.Controls.Add(this.m_buttonStop);
             this.Controls.Add(this.m_buttonOpen);
             this.Controls.Add(this.m_buttonClose);
             this.Controls.Add(this.m_pictureboxImage2);
-//            this.Controls.Add(this.m_buttonSetup);
+            this.Controls.Add(this.m_buttonSetup);
             this.Controls.Add(this.m_buttonScan);
+            this.Controls.Add(this.m_buttonStop);
             this.Controls.Add(this.m_pictureboxImage1);
             this.Name = "MIA-SCAN";
             this.Text = "МІА: Сканування";
