@@ -30,6 +30,7 @@ namespace INFOTECH
         public int OpenManager()            { return (int) self.OpenManager(); }
         public string DefaultIdentity()     { return self.GetDefault(); }
         public string OpenScanner(string id){ return self.OpenScanner(id); }
+        public int Rollback(int state)      { return (int)self.Twain.Rollback((TWAIN.STATE)state);}
         public bool NativeTransfer()        { self.NativeTransfer(); return self.Exit; }
         public bool AutoFeed()              { self.AutoFeed(); return self.Exit; }
         public bool AutoScan()              { self.AutoScan(); return self.Exit; }
@@ -60,13 +61,13 @@ namespace INFOTECH
             var files = new DirectoryInfo(root).EnumerateFiles("doc-*.pdf", SearchOption.AllDirectories);
             return "not detected file name";
         }
-        public bool Start(int afterStart) {
+        public int Start(int afterStart) {
             self.UseBitmap = 0;
             self.ScanStart = true;
             self.XferReadySent = false;
             self.DisableDsSent = false;
             self.AfterScan = (TWAIN.STATE) afterStart;
-            return self.Exit;
+            return 0;
         }
         public void Dispose() {self.Dispose();}
     }
