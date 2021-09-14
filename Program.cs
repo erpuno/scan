@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 using System.Windows.Forms;
 using System.Collections.Generic;
 using Microsoft.FSharp.Core;
@@ -48,7 +49,7 @@ namespace INFOTECH
         public string FileInfo() {
             string root = Directory.GetCurrentDirectory();
             var files = new DirectoryInfo(root).EnumerateFiles("doc-*.pdf", SearchOption.AllDirectories);
-            return files.Last().Name;
+            return "not detected file name";
         }
         public bool Init(int after) {
             self.UseBitmap = 0;
