@@ -198,13 +198,6 @@ namespace INFOTECH
             this.SystemTrayIcon.Icon = icon;
         }
 
-        public delegate void ScanCallbackEvent();
-
-        public void ScanCallbackEventHandler(object sender, EventArgs e)
-        {
-            ScanCallbackNative((twain.Twain == null) ? true : (twain.Twain.GetState() <= TWAIN.STATE.S3));
-        }
-
         [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
         public bool PreFilterMessage(ref Message a_message)
         {
@@ -335,6 +328,13 @@ namespace INFOTECH
             return (TWAIN.STS.SUCCESS);
         }
 
+        public void ScanCallbackEventHandler(object sender, EventArgs e)
+        {
+            ScanCallbackNative((twain.Twain == null) ? true : (twain.Twain.GetState() <= TWAIN.STATE.S3));
+            Application.DoEvents();
+            BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
+        }
+
         public TWAIN.STS ScanCallbackTrigger(bool a_blClosing)
         {
             BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
@@ -361,21 +361,7 @@ namespace INFOTECH
                 twain.Rollback(TWAIN.STATE.S4);
                 SetButtons(EBUTTONSTATE.OPEN);
             }
-/*
-            if (this.InvokeRequired)
-            {
-                return
-                (
-                    (TWAIN.STS)Invoke
-                    (
-                        (Func<TWAIN.STS>)delegate
-                        {
-                            return (ScanCallbackNative(a_blClosing));
-                        }
-                    )
-                );
-            }
- */
+
             Console.WriteLine("Scan Callback IsMsgCloseDsOk {0}", twain.Twain.IsMsgCloseDsOk());
             if (twain.Twain.IsMsgCloseDsOk() && !twain.DisableDsSent)
             {
@@ -510,14 +496,10 @@ namespace INFOTECH
                 SetButtons(EBUTTONSTATE.OPEN);
                 twain.ScanStart = true;
                 FinalizePDF(twain.AutoscanStartPage+1, twain.ImageCount);
-                twain.AutoscanStartPage = twain.ImageCount;
+                twain.AutoscanStartPage = twain.ImageCount;                
             }
 
-            Application.DoEvents();
-            BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
-
             return (TWAIN.STS.SUCCESS);
-
         }
 
         [SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
