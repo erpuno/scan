@@ -66,11 +66,21 @@ namespace INFOTECH
         }
 
         PdfDocument doc = new PdfDocument();
+
+        public string GetImageFolder() {
+            if (m_formsetup!=null) {
+                return m_formsetup.GetImageFolder();
+            } else {
+                // set to setup rollback directory.
+                // todo: check if it can be personal here
+                return Directory.GetCurrentDirectory();
+            }
+        }
  
         public void ProcessPDFPage(int start, int page)
         {
             Console.WriteLine("ProcessPDF {0}-{1}", start, page);
-            string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", page)) + ".tif";
+            string aszFilename = Path.Combine(GetImageFolder(), "img-" + string.Format("{0:D6}", page)) + ".tif";
             doc.Pages.Add(new PdfPage());
             XGraphics xgr = XGraphics.FromPdfPage(doc.Pages[page-start]);
             XImage img = XImage.FromFile(aszFilename);
@@ -81,7 +91,7 @@ namespace INFOTECH
         public void FinalizePDF(int start, int stop)
         {
             Console.WriteLine("CreatePDF {0}-{1}", start, stop);
-            doc.Save(Path.Combine(m_formsetup.GetImageFolder(), "doc-" + string.Format("{0:D6}", start) + "-" + string.Format("{0:D6}", stop)) + ".pdf");
+            doc.Save(Path.Combine(GetImageFolder(), "doc-" + string.Format("{0:D6}", start) + "-" + string.Format("{0:D6}", stop)) + ".pdf");
             doc.Close();
             doc = new PdfDocument();
         }
@@ -425,8 +435,8 @@ namespace INFOTECH
                 bitmap = null;
                 sts = twain.Twain.DatImagenativexfer(TWAIN.DG.IMAGE, TWAIN.MSG.GET, ref bitmap);
                 Console.WriteLine("ImageNativeXfer(): {0}", sts);
-                if (bitmap != null) Console.WriteLine("NATIVE GET: {0} {1} {2}", bitmap.Size, twain.ImageCount++, m_formsetup.GetImageFolder());
-                string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", twain.ImageCount)) + ".tif";
+                if (bitmap != null) Console.WriteLine("NATIVE GET: {0} {1} {2}", bitmap.Size, twain.ImageCount++, GetImageFolder());
+                string aszFilename = Path.Combine(GetImageFolder(), "img-" + string.Format("{0:D6}", twain.ImageCount)) + ".tif";
 
                 if (sts != TWAIN.STS.XFERDONE)
                 {
