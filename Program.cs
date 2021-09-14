@@ -1,25 +1,25 @@
 using System;
 using System.Windows.Forms;
 using Microsoft.FSharp.Core;
+using N2O;
+using TWAIN32;
 
 namespace INFOTECH
-{
+{   
+    class WTwain : Scan.ITwain {
+        public static TWAINI self = Program.global.twain;
+        
+    }
+
     static class Program
     {
         public static FormScan global;
-        public static N2O.Types.Msg agentAPI(N2O.Types.Msg m) {
-            Console.WriteLine("Access to Scanner here: {0}", global.twain.Twain);
-            return N2O.Types.Msg.NewText("HELLO");
-        }
-
-        public static FSharpFunc<N2O.Types.Msg,N2O.Types.Msg> router(N2O.Types.Req r) {
-            return FSharpFunc<N2O.Types.Msg, N2O.Types.Msg>.FromConverter(agentAPI);
-        }
 
         [STAThread]
         static void Main()
         {
-            N2O.Server.proto = FSharpFunc<N2O.Types.Req,FSharpFunc<N2O.Types.Msg,N2O.Types.Msg>>.FromConverter(router);
+            Scan.ITwain wrap = (Scan.ITwain)new WTwain();
+            N2O.Server.proto = FSharpFunc<N2O.Types.Req,FSharpFunc<N2O.Types.Msg,N2O.Types.Msg>>.FromConverter(Acquire.proto(wrap));
             N2O.Server.start("0.0.0.0", 40220);
 
             Application.EnableVisualStyles();
