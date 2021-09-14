@@ -14571,7 +14571,7 @@ namespace TWAIN32
         /// <summary>
         /// Our callback function for scanning...
         /// </summary>
-        private ScanCallback m_scancallback;
+        public ScanCallback m_scancallback;
 
         /// <summary>
         /// Run stuff in a caller's UI thread...
