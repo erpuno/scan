@@ -1,6 +1,8 @@
 using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
 using Microsoft.FSharp.Core;
+using Microsoft.FSharp.Collections;
 using N2O;
 using TWAIN32;
 
@@ -10,7 +12,11 @@ namespace INFOTECH
         public static TWAINI self = Program.global.twain;
 
         public int Start() {return 0;}
-        public FSharpList<string> GetDataSources() { return ListModule.OfSeq(self.GetDataSources().Select(s => CSV.Parse(s)[11].ToString()));}
+        public FSharpList<string> GetDataSources() { 
+            Func<string,string> conv = s => CSV.Parse(s)[11].ToString();
+
+            return ListModule.OfSeq(self.GetDataSources().ConvertAll(new Converter<string,string>(conv)));
+        }
         public int OpenManager() { return (int) self.OpenManager(); }
         public string DefaultIdentity() { return self.GetDefault(); }
         public string OpenScanner(string id) { return self.OpenScanner(id); }
@@ -28,7 +34,7 @@ namespace INFOTECH
         public bool AutoFeed(){ self.AutoFeed(); return self.Exit; }
         public bool AutoScan(){ self.AutoScan(); return self.Exit; }
         public bool ProgressDriverUi(bool p) { self.ProgressDriverUI(p); return self.Exit; }
-        public bool Setup() {
+        public bool SetCaps() {
 
             return self.Exit;
         }
@@ -59,11 +65,14 @@ namespace INFOTECH
     {
         public static FormScan global;
 
+        public static FSharpFunc<N2O.Types.Msg,N2O.Types.Msg> router(N2O.Types.Req r) {
+            return Acquire.proto((Scan.ITwain)new WTwain());
+        }
+
         [STAThread]
         static void Main()
         {
-            Scan.ITwain wrap = (Scan.ITwain)new WTwain();
-            N2O.Server.proto = FSharpFunc<N2O.Types.Req,FSharpFunc<N2O.Types.Msg,N2O.Types.Msg>>.FromConverter(Acquire.proto(wrap));
+            N2O.Server.proto = FSharpFunc<N2O.Types.Req,FSharpFunc<N2O.Types.Msg,N2O.Types.Msg>>.FromConverter(router);
             N2O.Server.start("0.0.0.0", 40220);
 
             Application.EnableVisualStyles();
