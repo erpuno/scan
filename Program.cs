@@ -12,15 +12,7 @@ namespace INFOTECH
     class WTwain : Scan.ITwain {
         public static TWAINI self = Program.global.twain;
 
-        public int Start() {return 0;}
-        public FSharpList<string> GetDataSources() { 
-            Func<string,string> conv = s => CSV.Parse(s)[11].ToString();
-
-            return ListModule.OfSeq(self.GetDataSources().ConvertAll(new Converter<string,string>(conv)));
-        }
-        public int OpenManager() { return (int) self.OpenManager(); }
-        public string DefaultIdentity() { return self.GetDefault(); }
-        public string OpenScanner(string id) { return self.OpenScanner(id); }
+        public int State { get { return (int)self.Twain.GetState();} }
         public bool Exit{
             get { return self.Exit; }
             set { self.Exit = value; }
@@ -29,14 +21,32 @@ namespace INFOTECH
             get { return new Scan.Callback((b) => (int)self.Twain.m_scancallback(b)); }
             set { self.Twain.m_scancallback = new TWAIN.ScanCallback((b) => (TWAIN.STS)value(b)); }
         }
-        public int State { get { return (int)self.Twain.GetState();} }
         public void NativeCallback(bool close) { Program.global.ScanCallbackNative(close); }
-        public bool NativeTransfer(){ self.NativeTransfer(); return self.Exit; }
-        public bool AutoFeed(){ self.AutoFeed(); return self.Exit; }
-        public bool AutoScan(){ self.AutoScan(); return self.Exit; }
-        public bool ProgressDriverUi(bool p) { self.ProgressDriverUI(p); return self.Exit; }
-        public bool SetCaps() {
 
+        public FSharpList<string> GetDataSources() { 
+            Func<string,string> conv = s => CSV.Parse(s)[11].ToString();
+            return ListModule.OfSeq(self.GetDataSources().ConvertAll(new Converter<string,string>(conv)));
+        }
+        public int OpenManager()            { return (int) self.OpenManager(); }
+        public string DefaultIdentity()     { return self.GetDefault(); }
+        public string OpenScanner(string id){ return self.OpenScanner(id); }
+        public bool NativeTransfer()        { self.NativeTransfer(); return self.Exit; }
+        public bool AutoFeed()              { self.AutoFeed(); return self.Exit; }
+        public bool AutoScan()              { self.AutoScan(); return self.Exit; }
+        public bool ProgressDriverUi(bool p){ self.ProgressDriverUI(p); return self.Exit; }
+        public bool EnableDuplex()          { self.EnableDuplex(); return self.Exit; }
+        public bool SetCaps() {
+            string szStatus = "";
+            TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
+            self.Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_CUSTOMDSDATA,0,0,0");
+            TWAIN.STS sts = self.Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.GETCURRENT, ref twcapability);
+            string szCapability = self.Twain.CapabilityToCsv(twcapability, true);
+            Console.WriteLine("GetCaps(): {0}", sts);
+            Console.WriteLine("Condition: {0}", !szCapability.EndsWith(",1") && !szCapability.EndsWith(",TRUE"));
+
+            if ((sts != TWAIN.STS.SUCCESS) || (!szCapability.EndsWith(",1") && !szCapability.EndsWith(",TRUE"))) {
+                // some remainings from setup form. check if its has any sence heres
+            }
             return self.Exit;
         }
         public int EnableDS() {
@@ -45,18 +55,17 @@ namespace INFOTECH
             self.Twain.CsvToUserinterface(ref twuserinterface, szTwmemref);
             return (int)self.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.ENABLEDS, ref twuserinterface);
         }
-        public bool EnableDuplex(){ self.EnableDuplex(); return self.Exit;}
         public string FileInfo() {
             string root = Directory.GetCurrentDirectory();
             var files = new DirectoryInfo(root).EnumerateFiles("doc-*.pdf", SearchOption.AllDirectories);
             return "not detected file name";
         }
-        public bool Init(int after) {
+        public bool Start(int afterStart) {
             self.UseBitmap = 0;
             self.ScanStart = true;
             self.XferReadySent = false;
             self.DisableDsSent = false;
-            self.AfterScan = (TWAIN.STATE) after;
+            self.AfterScan = (TWAIN.STATE) afterStart;
             return self.Exit;
         }
         public void Dispose() {self.Dispose();}
