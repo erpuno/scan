@@ -723,9 +723,11 @@ namespace INFOTECH
             twain.Rollback(TWAIN.STATE.S2);
             SetButtons(EBUTTONSTATE.CLOSED);
             twain.ProductDirectory = "";
-            m_formsetup.Dispose();
-            m_formsetup = null;
-            Console.WriteLine("Close Click");
+
+            if (m_formsetup!=null) {
+                m_formsetup.Dispose();
+                m_formsetup = null;
+            }
         }
 
         public void m_buttonStop_Click(object sender, EventArgs e)
