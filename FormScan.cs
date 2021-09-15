@@ -330,9 +330,13 @@ namespace INFOTECH
 
         public void ScanCallbackEventHandler(object sender, EventArgs e)
         {
-            ScanCallbackNative((twain.Twain == null) ? true : (twain.Twain.GetState() <= TWAIN.STATE.S3));
-            Application.DoEvents();
-            BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
+            if (twain.Twain != null) {
+                if (twain.Twain.GetState() > TWAIN.STATE.S4) {
+                    ScanCallbackNative(false);
+                    Application.DoEvents();
+                    BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
+                }
+            }
         }
 
         public TWAIN.STS ScanCallbackTrigger(bool a_blClosing)
