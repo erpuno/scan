@@ -66,11 +66,21 @@ namespace INFOTECH
         }
 
         PdfDocument doc = new PdfDocument();
+
+        public string GetImageFolder() {
+            if (m_formsetup!=null) {
+                return m_formsetup.GetImageFolder();
+            } else {
+                // set to setup rollback directory.
+                // todo: check if it can be personal here
+                return Directory.GetCurrentDirectory();
+            }
+        }
  
         public void ProcessPDFPage(int start, int page)
         {
             Console.WriteLine("ProcessPDF {0}-{1}", start, page);
-            string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", page)) + ".tif";
+            string aszFilename = Path.Combine(GetImageFolder(), "img-" + string.Format("{0:D6}", page)) + ".tif";
             doc.Pages.Add(new PdfPage());
             XGraphics xgr = XGraphics.FromPdfPage(doc.Pages[page-start]);
             XImage img = XImage.FromFile(aszFilename);
@@ -81,7 +91,7 @@ namespace INFOTECH
         public void FinalizePDF(int start, int stop)
         {
             Console.WriteLine("CreatePDF {0}-{1}", start, stop);
-            doc.Save(Path.Combine(m_formsetup.GetImageFolder(), "doc-" + string.Format("{0:D6}", start) + "-" + string.Format("{0:D6}", stop)) + ".pdf");
+            doc.Save(Path.Combine(GetImageFolder(), "doc-" + string.Format("{0:D6}", start) + "-" + string.Format("{0:D6}", stop)) + ".pdf");
             doc.Close();
             doc = new PdfDocument();
         }
@@ -186,13 +196,6 @@ namespace INFOTECH
             graphics.DrawString((counter++).ToString(), drawFont, brush, 0, 1);
             Icon icon = Icon.FromHandle(bitmap.GetHicon());
             this.SystemTrayIcon.Icon = icon;
-        }
-
-        public delegate void ScanCallbackEvent();
-
-        public void ScanCallbackEventHandler(object sender, EventArgs e)
-        {
-            ScanCallbackNative((twain.Twain == null) ? true : (twain.Twain.GetState() <= TWAIN.STATE.S3));
         }
 
         [SecurityPermissionAttribute(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.UnmanagedCode)]
@@ -325,6 +328,17 @@ namespace INFOTECH
             return (TWAIN.STS.SUCCESS);
         }
 
+        public void ScanCallbackEventHandler(object sender, EventArgs e)
+        {
+            if (twain.Twain != null) {
+                if (twain.Twain.GetState() > TWAIN.STATE.S4) {
+                    ScanCallbackNative(false);
+                    Application.DoEvents();
+                    BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
+                }
+            }
+        }
+
         public TWAIN.STS ScanCallbackTrigger(bool a_blClosing)
         {
             BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
@@ -351,21 +365,7 @@ namespace INFOTECH
                 twain.Rollback(TWAIN.STATE.S4);
                 SetButtons(EBUTTONSTATE.OPEN);
             }
-/*
-            if (this.InvokeRequired)
-            {
-                return
-                (
-                    (TWAIN.STS)Invoke
-                    (
-                        (Func<TWAIN.STS>)delegate
-                        {
-                            return (ScanCallbackNative(a_blClosing));
-                        }
-                    )
-                );
-            }
- */
+
             Console.WriteLine("Scan Callback IsMsgCloseDsOk {0}", twain.Twain.IsMsgCloseDsOk());
             if (twain.Twain.IsMsgCloseDsOk() && !twain.DisableDsSent)
             {
@@ -425,8 +425,8 @@ namespace INFOTECH
                 bitmap = null;
                 sts = twain.Twain.DatImagenativexfer(TWAIN.DG.IMAGE, TWAIN.MSG.GET, ref bitmap);
                 Console.WriteLine("ImageNativeXfer(): {0}", sts);
-                if (bitmap != null) Console.WriteLine("NATIVE GET: {0} {1} {2}", bitmap.Size, twain.ImageCount++, m_formsetup.GetImageFolder());
-                string aszFilename = Path.Combine(m_formsetup.GetImageFolder(), "img-" + string.Format("{0:D6}", twain.ImageCount)) + ".tif";
+                if (bitmap != null) Console.WriteLine("NATIVE GET: {0} {1} {2}", bitmap.Size, twain.ImageCount++, GetImageFolder());
+                string aszFilename = Path.Combine(GetImageFolder(), "img-" + string.Format("{0:D6}", twain.ImageCount)) + ".tif";
 
                 if (sts != TWAIN.STS.XFERDONE)
                 {
@@ -500,14 +500,10 @@ namespace INFOTECH
                 SetButtons(EBUTTONSTATE.OPEN);
                 twain.ScanStart = true;
                 FinalizePDF(twain.AutoscanStartPage+1, twain.ImageCount);
-                twain.AutoscanStartPage = twain.ImageCount;
+                twain.AutoscanStartPage = twain.ImageCount;                
             }
 
-            Application.DoEvents();
-            BeginInvoke(new MethodInvoker(delegate { ScanCallbackEventHandler(this, new EventArgs()); }));
-
             return (TWAIN.STS.SUCCESS);
-
         }
 
         [SuppressMessage("Microsoft.Security", "CA2123:OverrideLinkDemandsShouldBeIdenticalToBase")]
@@ -723,9 +719,11 @@ namespace INFOTECH
             twain.Rollback(TWAIN.STATE.S2);
             SetButtons(EBUTTONSTATE.CLOSED);
             twain.ProductDirectory = "";
-            m_formsetup.Dispose();
-            m_formsetup = null;
-            Console.WriteLine("Close Click");
+
+            if (m_formsetup!=null) {
+                m_formsetup.Dispose();
+                m_formsetup = null;
+            }
         }
 
         public void m_buttonStop_Click(object sender, EventArgs e)
