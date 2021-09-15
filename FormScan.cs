@@ -561,6 +561,7 @@ namespace INFOTECH
 
         public void m_buttonScan_Click(object sender, EventArgs e)
         {
+            twain.scanCallback = ScanCallbackTrigger;
             twain.UseBitmap = 0;
             string szTwmemref;
             TWAIN.STS sts;
