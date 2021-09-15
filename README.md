@@ -1,4 +1,4 @@
-MIA: Agent Сканування
+MIA: Агент Сканування
 =====================
 
 `МІА: Агент Сканування` is a simple Windows tray application as a scanning service for `МІА: Документообіг` clients.
