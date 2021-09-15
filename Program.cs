@@ -22,7 +22,7 @@ namespace INFOTECH
             set { self.Twain.m_scancallback = new TWAIN.ScanCallback((b) => (TWAIN.STS)value(b)); }
         }
         public void NativeCallback(bool close) { Program.global.ScanCallbackNative(close); }
-
+        
         public FSharpList<string> GetDataSources() { 
             Func<string,string> conv = s => CSV.Parse(s)[11].ToString();
             return ListModule.OfSeq(self.GetDataSources().ConvertAll(new Converter<string,string>(conv)));
@@ -30,6 +30,7 @@ namespace INFOTECH
         public int OpenManager()            { return (int) self.OpenManager(); }
         public string DefaultIdentity()     { return self.GetDefault(); }
         public string OpenScanner(string id){ return self.OpenScanner(id); }
+        public void Init()                  { self.Init(Program.global.Handle); }
         public void Rollback(int state)     { self.Rollback((TWAIN.STATE) state);}
         public bool NativeTransfer()        { self.NativeTransfer(); return self.Exit; }
         public bool AutoFeed()              { self.AutoFeed(); return self.Exit; }
