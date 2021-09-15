@@ -30,7 +30,7 @@ namespace INFOTECH
         public int OpenManager()            { return (int) self.OpenManager(); }
         public string DefaultIdentity()     { return self.GetDefault(); }
         public string OpenScanner(string id){ return self.OpenScanner(id); }
-        public int Rollback(int state)      { return (int)self.Twain.Rollback((TWAIN.STATE)state);}
+        public void Rollback(int state)     { self.Rollback((TWAIN.STATE) state);}
         public bool NativeTransfer()        { self.NativeTransfer(); return self.Exit; }
         public bool AutoFeed()              { self.AutoFeed(); return self.Exit; }
         public bool AutoScan()              { self.AutoScan(); return self.Exit; }
