@@ -59,7 +59,14 @@ namespace INFOTECH
         public string FileInfo() {
             string root = Directory.GetCurrentDirectory();
             var files = new DirectoryInfo(root).EnumerateFiles("doc-*.pdf", SearchOption.AllDirectories);
-            return "not detected file name";
+            // the params on which file name is based immidiately updated after save
+            // so we can't rely now on real file name just take the last one
+            IEnumerator<FileInfo> e = files.GetEnumerator();
+            FileInfo current;
+            do {
+                current = e.Current;
+            } while (e.MoveNext());
+            return Path.Combine(current.Directory.FullName,current.Name);
         }
         public int Start(int afterStart) {
             self.UseBitmap = 0;
