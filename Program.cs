@@ -27,7 +27,17 @@ namespace INFOTECH
             Func<string,string> conv = s => CSV.Parse(s)[11].ToString();
             return ListModule.OfSeq(self.GetDataSources().ConvertAll(new Converter<string,string>(conv)));
         }
-        public int OpenManager()            { return (int) self.OpenManager(); }
+        public int OpenDSM()                { return (int) self.OpenManager(); }
+        public int CloseDSM()               {
+            IntPtr handle = Program.global.Handle;//IntPtr.Zero
+            TWAIN.STS sts = self.Twain.DatParent(TWAIN.DG.CONTROL, TWAIN.MSG.CLOSEDSM, ref handle);
+            Console.WriteLine("Close status {0} {1}", sts, handle);
+            Program.global.SetButtons(FormScan.EBUTTONSTATE.CLOSED);
+            if (Program.global.m_formsetup!=null) {
+                Program.global.m_formsetup.Dispose();
+            };
+            return (int) sts;
+        }
         public string DefaultIdentity()     { return self.GetDefault(); }
         public string OpenScanner(string id){ return self.OpenScanner(id); }
         public void Init()                  { self.Init(Program.global.Handle); }
@@ -37,20 +47,6 @@ namespace INFOTECH
         public bool AutoScan()              { self.AutoScan(); return self.Exit; }
         public bool ProgressDriverUi(bool p){ self.ProgressDriverUI(p); return self.Exit; }
         public bool EnableDuplex()          { self.EnableDuplex(); return self.Exit; }
-        public bool SetCaps() {
-            string szStatus = "";
-            TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
-            self.Twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_CUSTOMDSDATA,0,0,0");
-            TWAIN.STS sts = self.Twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.GETCURRENT, ref twcapability);
-            string szCapability = self.Twain.CapabilityToCsv(twcapability, true);
-            Console.WriteLine("GetCaps(): {0}", sts);
-            Console.WriteLine("Condition: {0}", !szCapability.EndsWith(",1") && !szCapability.EndsWith(",TRUE"));
-
-            if ((sts != TWAIN.STS.SUCCESS) || (!szCapability.EndsWith(",1") && !szCapability.EndsWith(",TRUE"))) {
-                // some remainings from setup form. check if its has any sence heres
-            }
-            return self.Exit;
-        }
         public int EnableDS() {
             string szTwmemref = "FALSE,FALSE,0"; //hide windows and reset handle
             TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);            

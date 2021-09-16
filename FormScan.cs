@@ -561,13 +561,17 @@ namespace INFOTECH
 
         public void m_buttonScan_Click(object sender, EventArgs e)
         {
+            // restore ui callbacks and force new setup
+            // because of scan from websocket
             twain.scanCallback = ScanCallbackTrigger;
+            twain.Twain.m_scancallback = ScanCallbackTrigger;
+            m_formsetup = new FormSetup(this, ref twain.Twain, twain.ProductDirectory);
+
             twain.UseBitmap = 0;
-            string szTwmemref;
-            TWAIN.STS sts;
-            EnsureFormSetup();
             twain.Exit = false;
             twain.ScanStart = true;
+
+            string szTwmemref;
 
             if (m_formsetup.IsCustomDsDataSupported()) { szTwmemref = "FALSE,FALSE," + this.Handle; }
             else { szTwmemref = "TRUE,FALSE," + this.Handle; }
@@ -576,7 +580,7 @@ namespace INFOTECH
 
             TWAIN.TW_USERINTERFACE twuserinterface = default(TWAIN.TW_USERINTERFACE);
             twain.Twain.CsvToUserinterface(ref twuserinterface, szTwmemref);
-            sts = twain.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.ENABLEDS, ref twuserinterface); // SCAN SEQ
+            TWAIN.STS sts = twain.Twain.DatUserinterface(TWAIN.DG.CONTROL, TWAIN.MSG.ENABLEDS, ref twuserinterface); // SCAN SEQ
 
             if (twuserinterface.ShowUI != 0) { twain.AfterScan = TWAIN.STATE.S5; }
             else { twain.AfterScan = TWAIN.STATE.S4; }

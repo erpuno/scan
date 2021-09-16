@@ -51,10 +51,14 @@ namespace INFOTECH
 
             szStatus = "";
             TWAIN.TW_CAPABILITY twcapability = default(TWAIN.TW_CAPABILITY);
+            
+            // CAP_CUSTOMDSDATA,0,0,0 its actually not valid capability
+            // container type can't be 0, so this construction will fail if current is absent
             m_twain.CsvToCapability(ref twcapability, ref szStatus, "CAP_CUSTOMDSDATA,0,0,0");
             sts = m_twain.DatCapability(TWAIN.DG.CONTROL, TWAIN.MSG.GETCURRENT, ref twcapability);
             szCapability = m_twain.CapabilityToCsv(twcapability, true);
-            Console.WriteLine("GetCaps(): {0}", sts);
+
+            Console.WriteLine("GetCurrentCap(CAP_CUSTOMDATA): {0} {1}", sts, szCapability);
             Console.WriteLine("Condition: {0}", !szCapability.EndsWith(",1") && !szCapability.EndsWith(",TRUE"));
 
             if ((sts != TWAIN.STS.SUCCESS) || (!szCapability.EndsWith(",1") && !szCapability.EndsWith(",TRUE")))
