@@ -73,7 +73,27 @@ namespace INFOTECH
             self.AfterScan = (TWAIN.STATE) afterStart;
             return 0;
         }
+        public string ControlCapGetCurrent(string cap)  { return ControlMsg(TWAIN.MSG.GETCURRENT, cap); }
+        public string ControlCapGet(string cap)         { return ControlMsg(TWAIN.MSG.GET, cap); }
+        public string ControlCapSet(string cap)         { return ControlMsg(TWAIN.MSG.SET, cap); }
+        public string ControlCapReset()                 { return ControlMsg(TWAIN.MSG.RESETALL, "0,0,0"); }
         public void Dispose() {self.Dispose();}
+
+        private string ControlMsg(TWAIN.MSG msg, string cap) {
+            string status = "";
+            TWAIN.TW_CAPABILITY twcap = default(TWAIN.TW_CAPABILITY);
+
+            if (self.Twain.CsvToCapability(ref twcap, ref status, cap)) {
+                TWAIN.STS sts = self.Twain.DatCapability(TWAIN.DG.CONTROL, msg, ref twcap);
+
+                if (sts == TWAIN.STS.SUCCESS) {
+                    return self.Twain.CapabilityToCsv(twcap, true); // MSG.QUERYSUPPORT - false                    
+                } else {
+                    throw new Exception(((int)sts).ToString());
+                }
+            }
+            return status;
+        }
     }
 
     static class Program
