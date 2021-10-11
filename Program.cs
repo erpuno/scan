@@ -77,6 +77,10 @@ namespace INFOTECH
         public string ControlCapGet(string cap)         { return ControlMsg(TWAIN.MSG.GET, cap); }
         public string ControlCapSet(string cap)         { return ControlMsg(TWAIN.MSG.SET, cap); }
         public string ControlCapReset()                 { return ControlMsg(TWAIN.MSG.RESETALL, "0,0,0"); }
+
+        public string ImageCapGetCurrent(string cap)    { return ImageMsg(TWAIN.MSG.GETCURRENT, cap); }
+        public string ImageCapSet(string cap)           { return ImageMsg(TWAIN.MSG.SET, cap); }
+
         public void Dispose() {self.Dispose();}
 
         private string ControlMsg(TWAIN.MSG msg, string cap) {
@@ -88,6 +92,22 @@ namespace INFOTECH
 
                 if (sts == TWAIN.STS.SUCCESS) {
                     return self.Twain.CapabilityToCsv(twcap, true); // MSG.QUERYSUPPORT - false                    
+                } else {
+                    throw new Exception(((int)sts).ToString());
+                }
+            }
+            return status;
+        }
+        private string ImageMsg(TWAIN.MSG msg, string cap) {
+            string status = "";
+
+            TWAIN.TW_IMAGEINFO twimageinfo = default(TWAIN.TW_IMAGEINFO);
+
+            if (TWAIN.CsvToImageinfo(ref twimageinfo, cap)){
+                TWAIN.STS sts = self.Twain.DatImageinfo(TWAIN.DG.IMAGE, msg, ref twimageinfo);
+
+                if (sts == TWAIN.STS.SUCCESS){
+                    return TWAIN.ImageinfoToCsv(twimageinfo);
                 } else {
                     throw new Exception(((int)sts).ToString());
                 }
