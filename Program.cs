@@ -93,11 +93,12 @@ namespace INFOTECH
                 if (sts == TWAIN.STS.SUCCESS) {
                     return self.Twain.CapabilityToCsv(twcap, true); // MSG.QUERYSUPPORT - false                    
                 } else {
-                    throw new Exception(((int)sts).ToString());
+                    return ((int)sts).ToString();
                 }
             }
             return status;
         }
+
         private string ImageMsg(TWAIN.MSG msg, string cap) {
             string status = "";
 
