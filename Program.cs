@@ -42,7 +42,7 @@ namespace INFOTECH
         public string OpenScanner(string id){ return self.OpenScanner(id); }
         public void Init()                  { self.Init(Program.global.Handle); }
         public void Rollback(int state)     { self.Rollback((TWAIN.STATE) state);}
-        public bool NativeTransfer()        { self.NativeTransfer(); return self.Exit; }
+        //public bool NativeTransfer()        { self.NativeTransfer(); return self.Exit; }
         public bool AutoFeed()              { self.AutoFeed(); return self.Exit; }
         public bool AutoScan()              { self.AutoScan(); return self.Exit; }
         public bool ProgressDriverUi(bool p){ self.ProgressDriverUI(p); return self.Exit; }
